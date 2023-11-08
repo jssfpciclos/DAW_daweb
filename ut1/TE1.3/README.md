@@ -1,5 +1,9 @@
 # UT1-TE1.3: Documentación y sistemas de control de versiones
 
+### Recursos
+ 
+- [Como hacer tu primera Pull Request en un proyecto GITHUB 🧱](https://youtu.be/BPns9r76vSI)
+
 ### TAREA EVALUABLE 1.3
 
 1. El alumnado trabajará por parejas: `user1` y `user2`. Indicar quién es `user1` y quién es `user2`.
