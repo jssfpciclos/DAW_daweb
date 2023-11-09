@@ -4,23 +4,23 @@ La entrega de las tareas se hará vía **repositorio de GitHub**.
 
 ## Creación del repositorio
 
-Debes crear un **repositorio privado** en GitHub con el nombre **`2324_DAWeb_{NombreApellido1}`** y dar permisos de lectura al usuario `jssdocente`.
+Debes crear un **repositorio privado** en GitHub con el nombre **`2324_DAWeb_{NombreApellido1}`** y dar permisos de lectura al usuario `jssdocente`, incluyendolo como colaborador.
 
 ## Estructura del repositorio
 
 ```python
-ut1
+UT1
  └─ te1.1
  └─ te1.2
  └─ ...
-ut2
+UT2
  └─ te2.1
  └─ te2.2
  └─ ...
 ...
 ```
 
-> 💡 UT viene de Unidad de Trabajo y BT viene de Boletín/Tarea Evaluable.
+> 💡 UT viene de Unidad de Trabajo y TE viene de Boletín/Tarea Evaluable.
 
 ## Contenido de la Tarea Evaluable
 
@@ -31,7 +31,7 @@ Dentro de cada carpeta `te<X>` el contenido será el siguiente:
 - `images`: carpeta para otras imágenes (si procede).
 - `README.md`: informe escrito en GitHub sabor Markdown.
 
-Los "`h1`" (`# <Heading>`) del `README.md` deberán **coincidir con los criterios a evaluar de la rúbrica** correspondiente a la tarea y habrá que **crear un índice** a estos epígrafes al principio del informe.
+Los "`h1`" (`# <Heading>`) del `README.md` deberán **coincidir con los criterios a evaluar de la rúbrica o los pasos de la tarea** correspondiente a la tarea y habrá que **crear un índice** a estos epígrafes al principio del informe.
 
 ## Comandos
 

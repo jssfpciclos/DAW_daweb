@@ -2,7 +2,8 @@
 
 ### Recursos
  
-- [Como hacer tu primera Pull Request en un proyecto GITHUB 🧱](https://youtu.be/BPns9r76vSI)
+- [Como hacer tu primera Pull Request en un proyecto GITHUB 🧱](https://youtu.be/_M8oalUyz10)
+- [Documentación de la Unidad de Trabajo](https://sharp-voice-0ff.notion.site/Documentaci-n-y-sistemas-de-control-de-versiones-4f34a299f66d42b1aac4853788a41127)
 
 ### TAREA EVALUABLE 1.3
 
@@ -13,8 +14,8 @@
 5. `user2` clonará su fork del repo.
 6. `user1` creará una issue con el título "Add custom text for startup contents".
 7. `user2` creará una nueva rama `custom-text` y modificará el fichero `index.html` personalizándolo para una supuesta startup.
-8. `user2` enviará un pull-request (PR) a `user1`.
-9. `user1` probará el PR de `user2` en su máquina (copia local) creando previamente un remoto denominado `upstream`, y realizará ciertos cambios en su copia local que luego deberá subir al propio PR.
+8. `user2` enviará un pull-request (PR) a `user1` (marcando `Allow edits from maintainers`).
+9. `user1` probará el PR de `user2` en su máquina (copia local), clonando el repositorio del `user2` en un nueva carpeta, posicionandose en la rama `custom-text`, y realizará ciertos cambios en su copia local que luego deberá subir al propio PR (usando `git push` a la rama `custom-text` en remoto).
 10. `user1` y `user2` tendrán una pequeña conversación en la página del PR, donde cada usuario incluirá, al menos, un cambio más.
 11. `user1` finalmente aprobará el PR, cerrará la issue creada (usando una referencia a la misma) y actualizará la rama principal en su copia local.
 12. `user2` deberá incorporar los cambios de la rama principal de `upstream` en su propia rama principal.
