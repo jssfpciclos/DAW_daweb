@@ -24,7 +24,7 @@ UT2
 
 ## Contenido de la Tarea Evaluable
 
-Dentro de cada carpeta `te<X>` el contenido será el siguiente:
+Dentro de cada carpeta `TE<X>` el contenido será el siguiente:
 
 - `screenshots`: carpeta para capturas de pantalla.
 - `src`: carpeta para código de aplicación (si procede).
@@ -50,6 +50,13 @@ Si la tarea incluye acceso a cualquier URL, la **captura de pantalla** deberá i
 No se trata de copiar el contenido de los apuntes tal cual en el informe. Habrá cosas que harán falta y otras que no. **El objetivo es crear una historia ordenada** que tenga sentido y que transmita la sensación de haber comprendido el proceso global.
 
 ## Subida de la tarea
+
+En **moodle** se especificará la forma de entrega.
+
+
+### Forma de entrega predeterminada
+
+En caso de que la tarea no tenga instrucciones de entrega por defecto se realiza de la siguiente forma:
 
 Se habilitará una entrega en el **Moodle** donde se tendrá que subir únicamente la URL al `README.md` incluyendo el commit específico.
 
