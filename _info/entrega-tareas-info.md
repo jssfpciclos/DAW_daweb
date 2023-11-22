@@ -51,8 +51,10 @@ No se trata de copiar el contenido de los apuntes tal cual en el informe. Habrá
 
 ## Subida de la tarea
 
-En **moodle** se especificará la forma de entrega.
+Puede ser de 2 formas:
 
+1. En **moodle** se especificará la forma de entrega, de forma detallada.
+2. En caso de que no se especifique nada, se realizará de la siguiente forma:
 
 ### Forma de entrega predeterminada
 
