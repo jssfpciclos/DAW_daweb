@@ -13,11 +13,12 @@
 3. `user1` clonará el repo y añadirá los ficheros: [index.html](./files/index.html), [bootstrap.min.css](./files/bootstrap.min.css) y [cover.css](./files/cover.css). Luego subirá los cambios al remoto `origin` (_upstream_).
 4. `user2` creará un fork de **git-work** desde su cuenta de GitHub.
 5. `user2` clonará su fork del repo.
-6.  
+6. (No-hacer)
 7. `user2` creará una nueva rama `custom-text` y modificará el fichero `index.html` personalizándolo para una supuesta startup.
+   Subirá los cambios al remoto `origin`. (`git push origin`)
 8. `user2` enviará un pull-request (PR) a `user1` (marcando `Allow edits from maintainers`).
 9. `user1` probará el PR de `user2` en su máquina (copia local):
-   -  Agregando un remoto de nombre `origin-forked` y la rama `custom-text` del `user2`
+   -  Agregando un remoto de nombre `origin-forked` y la rama `custom-text` del `user2` (`git remote add origin-forked {url-repositorio-fork}`)
    -  Obtienendo los últimos cambios del remoto (`git pull origin-forked custom-text`).
    -  Cambiar a rama `custom-text`,
    -  Y realizar ciertos cambios en su copia local.
