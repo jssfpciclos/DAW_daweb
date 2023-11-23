@@ -19,41 +19,36 @@
 8. `user2` enviará un pull-request (PR) a `user1` (marcando `Allow edits from maintainers`).
 9. `user1` probará el PR de `user2` en su máquina (copia local):
    -  Agregando un remoto de nombre `origin-forked` y la rama `custom-text` del `user2` (`git remote add origin-forked {url-repositorio-fork}`)
-   -  Obtienendo los últimos cambios del remoto (`git pull origin-forked custom-text`).
-   -  Cambiar a rama `custom-text`,
-   -  Y realizar ciertos cambios en su copia local.
+   -  Obtienendo los últimos cambios del remoto (`git fetch origin-forked custom-text`), sin mezclarlos con su copia local.
+   -  Cambiar a rama `custom-text`. (`git checkout custom-text`)
+   -  Y realizar ciertos cambios en su copia local. (Cambiar cualquier texto en `index.html`)
    -  Una vez los cambios realizados en local, subir los cambios al remoto `git push origin-forked`.
 10. `user1` y `user2` tendrán una pequeña conversación en la página del PR, donde cada usuario incluirá, al menos, un cambio más.
 11. `user1` finalmente aprobará el PR.
-12. `user1` actualizará la rama principal en su copia local.
-13. `user2` deberá incorporar los cambios de la rama principal de `origin` (upstream) en su propia rama principal.  `git pull origin`
-14. (No hacer)
-15. `user1` cambiará la línea 10 de `cover.css` a:
+12. `user1` actualizará la rama principal en su copia local. (`git pull origin main`)
+    > (Es importante ahora eliminar el remoto `origin-forked` y la rama `custom-text` de su copia local.)
+    ```bash	
+    git remote remove origin-forked
+    git branch -d custom-text
+    ```
 
-```css
-color: purple;
-```
+13. `user2` incorporará los cambios del `user1` rama main (a través de la interfaz de Github). 
+    Ahora, los cambios que envió `user2` en el PR, se encuentran en la rama `main` de `user1`, y ahora también en la rama `main` de `user2`.<br>
 
-16. `user1` hará simplemente un commit local en main → NO HACER `git push`.
-17. `user2` creará una nueva rama `cool-colors` y cambiará la línea 10 de `cover.css` a:
+    == POR TANTO EL CICLO SE HA CERRADO ==
 
-```css
-color: darkgreen;
-```
+14. `user2` deberá actualizar su copia local desde remoto en su rama `main`. (`git pull origin`)
+    
+#### Ejecutar limpieza de ramas
 
-18. `user2` enviará un PR a `user1`.
-19. `user1` probará el PR de `user2` (en su copia local, igual que el paso 9).
-20. A continuación tratará de mergear el contenido de la rama `cool-colors` en su rama principal y tendrá que gestionar el conflicto: Dejar el contenido que viene de `user2`.
-21. Después del commit para arreglar el conflicto, `user1` modificará la línea 11 de `cover.css` a:
+Ahora que `user2` ha incorporado los cambios en la rama `main` de `user1` en su rama principal, puede eliminar la rama `custom-text` de su repositorio local y remoto.
 
-```css
-text-shadow: 2px 2px 8px lightgreen;
-```
+15. `user2` eliminará la rama `custom-text` de su repositorio local y remoto.
+    > Fundamental, posicionarse en otra rama distinta a la que se va a eliminar. (Ej: `main`)
 
-22. `user1` hará un commit especificando en el mensaje de commit el cambio hecho (sombra). A continuación subirá los cambios a `origin/main`. (`git push origin main`).
-
-23. `user1` etiquetará esta versión (en su copia local) como `0.1.0` y después de subir los cambios creará una "release" en GitHub apuntando a esta etiqueta.
-
+        - `git branch -d custom-text` (local)
+        - `git push origin --delete custom-text` (remoto)
+    
 
 
 ## Entregable
