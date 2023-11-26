@@ -53,7 +53,7 @@ Ahora que `user2` ha incorporado los cambios en la rama `main` de `user1` en su 
 
 ### Crear release
 
-16. `user1` etiquetará esta versión (en su copia local) como `0.1.0` y subirá los cambios. Después de subir los cambios creará una release en GitHub con el mismo nombre de la etiqueta. (0.1.0)
+16. `user1` etiquetará esta versión (en su copia local) como `0.1.0` y subirá los cambios. Después de subir los cambios creará una release en GitHub con el mismo nombre de la etiqueta. (0.1.0)  [explicación del paso](https://youtu.be/wwHtJWS1haA)
     
 
 ## Entregable
