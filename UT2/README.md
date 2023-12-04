@@ -302,8 +302,7 @@ Uno de los comandos más cómodos de este paquete es: `docker-clean run` que se 
 <details>
   <summary><b><p style="display:inline;font-size:16px">Ejecución simple de contenedores</p></b></summary>
    
-   #### Ejecución simple de contenedores
-
+   <br>
    Con el comando `run`  vamos a crear un contenedor donde vamos a ejecutar un comando, en este caso vamos a crear el contenedor a partir de una imagen ubuntu. Como todavía no hemos descargado ninguna imagen del registro docker hub, es necesario que se descargue la imagen. Si la tenemos ya en nuestro ordenador no será necesario la descarga.
 
 ```bash
@@ -336,7 +335,7 @@ Con el comando `docker images`
 <details>
   <summary><b><p style="display:inline;font-size:16px">Ejecutando Ubuntu como un Docker Container</p></b></summary>
 
-  #### Ejecutando Ubuntu como un Docker Container
+  <br>
 
 Más que instalar Ubuntu en una máquina virtual, podemos ejecutar Ubuntu como un contenedor de Docker. Esto es posible porque Docker proporciona una imagen de Ubuntu en su repositorio de imágenes. Para ejecutar Ubuntu como un contenedor de Docker, primero debemos descargar la imagen de Ubuntu del repositorio de imágenes de Docker usando el comando `pull` :
 
@@ -448,7 +447,7 @@ Los contenedores son tan ligeros que son de usar y tirar, por lo que si necesita
 <details>
   <summary><b><p style="display:inline;font-size:16px">Caso práctico. Ejecutar SSH en contenedor</p></b></summary>
    
-   ### Utilizar una imagen existente
+   <br>
 
    Para este caso práctico vamos a utilizar una imagen que ya existe en el registro de Docker Hub. Se trata de la imagen `rastasheep/ubuntu-sshd`. Esta imagen nos permite ejecutar un servidor SSH en un contenedor de Docker.
 
