@@ -330,8 +330,6 @@ Con el comando `docker images`
 
 </details>
 
-<br>
-
 <details>
   <summary><b><p style="display:inline;font-size:16px">Ejecutando Ubuntu como un Docker Container</p></b></summary>
 
@@ -442,8 +440,6 @@ Los contenedores son tan ligeros que son de usar y tirar, por lo que si necesita
 
 </details>
 
-<br>
-
 <details>
   <summary><b><p style="display:inline;font-size:16px">Caso práctico. Ejecutar SSH en contenedor</p></b></summary>
    
@@ -542,6 +538,4 @@ Los contenedores son tan ligeros que son de usar y tirar, por lo que si necesita
 
 </details>
 
-
-<br>
 
