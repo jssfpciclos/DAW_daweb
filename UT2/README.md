@@ -300,7 +300,9 @@ Uno de los comandos más cómodos de este paquete es: `docker-clean run` que se 
 # Trabajo con Docker
 
 <details>
-  <summary><b>Ejecución simple de contenedores</b></summary>
+  <summary><b><p style="display:inline;font-size:16px">Ejecución simple de contenedores</p></b></summary>
+   
+   #### Ejecución simple de contenedores
 
    Con el comando `run`  vamos a crear un contenedor donde vamos a ejecutar un comando, en este caso vamos a crear el contenedor a partir de una imagen ubuntu. Como todavía no hemos descargado ninguna imagen del registro docker hub, es necesario que se descargue la imagen. Si la tenemos ya en nuestro ordenador no será necesario la descarga.
 
@@ -332,7 +334,9 @@ Con el comando `docker images`
 <br>
 
 <details>
-  <summary><b>Ejecutando Ubuntu como un Docker Container</b></summary>
+  <summary><b><p style="display:inline;font-size:16px">Ejecutando Ubuntu como un Docker Container</p></b></summary>
+
+  #### Ejecutando Ubuntu como un Docker Container
 
 Más que instalar Ubuntu en una máquina virtual, podemos ejecutar Ubuntu como un contenedor de Docker. Esto es posible porque Docker proporciona una imagen de Ubuntu en su repositorio de imágenes. Para ejecutar Ubuntu como un contenedor de Docker, primero debemos descargar la imagen de Ubuntu del repositorio de imágenes de Docker usando el comando `pull` :
 
@@ -442,7 +446,7 @@ Los contenedores son tan ligeros que son de usar y tirar, por lo que si necesita
 <br>
 
 <details>
-  <summary><b>Caso práctico. Ejecutar SSH en contenedor</b></summary>
+  <summary><b><p style="display:inline;font-size:16px">Caso práctico. Ejecutar SSH en contenedor</p></b></summary>
    
    ### Utilizar una imagen existente
 
