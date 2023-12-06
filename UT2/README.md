@@ -55,11 +55,11 @@
 
 ## 📚 Contenidos
 
-1. [Introducción a Docker](doc/01.intro.md)
-2. [Networking y Almacenamiento en Docker](doc/02.networking.md)
+1. [Introducción a Docker](doc/01.intro-docker.md)
+2. [Networking y Almacenamiento en Docker](doc/02.networking-store.md)
 
 
 ## 📚 Casos prácticos
 
 1. [Ejecutar SSH en contendor](doc/caso-practico/01.ssh-container.md)
-2. [Instalar MariaDB en contendor](doc/caso-practico/02.mariadb-container.md)
+2. [Instalar MariaDB en contendor](doc/caso-practico/02.db-container.md)
