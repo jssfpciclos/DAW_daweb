@@ -57,6 +57,7 @@
 
 1. [Introducción a Docker](doc/01.intro-docker.md)
 2. [Networking y Almacenamiento en Docker](doc/02.networking-store.md)
+3. [Docker Compose](doc/03.docker-compose.md)
 
 
 ## 📚 Casos prácticos
