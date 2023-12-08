@@ -64,3 +64,4 @@
 
 1. [Ejecutar SSH en contendor](doc/caso-practico/01.ssh-container.md)
 2. [Instalar MariaDB en contendor](doc/caso-practico/02.db-container.md)
+3. [Stack LAMP con Docker](doc/caso-practico/03.lamp-docker.md)
