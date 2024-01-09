@@ -1,4 +1,4 @@
-# UT1-TE2.1: Tarea Evaluable 2.1. Dockerización de stack LAMP
+# UT2-TE2.1: Tarea Evaluable 2.1. Dockerización de stack LAMP
 
 En esta tarea vamos a dockerizar el stack LAMP que hemos creado en el caso práctico que se indica en recursos.
 
