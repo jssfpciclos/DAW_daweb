@@ -19,14 +19,14 @@ En esta tarea vamos a dockerizar el stack LAMP que hemos creado en el caso prác
 
 ### Entregable
 
-Informe explicando los pasos seguidos para resolver la tarea. 
+Informe explicando los pasos seguidos para resolver la tarea, y adjuntando las imágenes/gif que se solicitan en cada uno de los pasos.
+El informe se entregará en un fichero `README.md` en el repositorio oficial del alumno, en la carpeta `UT2/TE2.1/`.<br>
 
 Se entregará con el siguiente formato:
 
 1. Titulo de la tarea, donde se indique el nombre de la tarea y el nombre de la asignatura, y el nombre del alumno, asi como el enlace (formato commit) al fichero (README.md) de vuestro repositorio.
-2. Explicación de cada uno de los puntos:
-   - En cada uno de los pasos que se indican en la tarea, el alumno debe explicar ese paso y adjuntar cuantas imágenes/gif considere necesarias para explicar el paso.
-   - 
+2. Explicación de cada uno de los puntos, según se indica en cada uno de los pasos.	
+  
 
 Estructura carpeta entrega (vuestro repositorio oficial):
 
@@ -46,10 +46,10 @@ UT2/TE2.1/src
 
 ### Pasos iniciales
 
-1. Clonar el repositorio [repositorio](git clone https://github.com/jssdocente/docker-lamp.git), en una carpeta que llamaremos `docker-lamp`.
+1. Descargar los [recursos de la tarea](res/Tarea2.1.recursos.rar) y descomprimir en una carpeta que llamaremos `docker-lamp`.
 2. Crear una imagen de Docker que incluya Apache y PHP, a partir de la imagen oficial de PHP 8.0.0 con Apache, e incluyendo el driver de MySQL para PHP.
    1. Crear el fichero DockerFile para la creación de la imagen (Los detalles están incluidos en el [caso práctico](../caso-practico/03.lamp-docker.md)).<br>
-   2. Construir el DockerFile dando a la imagen `php-apache8.0-SDF` con el tag `1.0`. `docker build -t php-apache8.0-SDF:1.0.`. (mostrar imagen que no muestra error en la creación)
+   2. Construir el DockerFile dando a la imagen `php-apache8.0-SDF` con el tag `1.0`. `docker build -t php-apache8.0-sdf:1.0 . `. (mostrar imagen que no muestra error en la creación)
    3. Mostrar que la imagen creada está disponible en el repositorio local de imágenes. `docker images`.
    4. Borrar la imagen creada.    
    <br>
@@ -62,7 +62,8 @@ UT2/TE2.1/src
 En esta serie de pasos se debe ir creando el fichero `docker-compose.yml` que permitirá crear los contenedores necesarios para el stack LAMP, se construirá por partes, y revisando si funciona cada parte
  
 3. Definir el servicio `wwww`, que utiliza la imagen que debe construir a través del DockerFile creado en el paso anterior con los siguientes datos.<br>
-   - nombre-image-crear: `daw/lamp-apache-php8-SDF:1.0`
+   - nombre-image-crear: `daw/lamp-apache-php8-sdf:1.0`
+   - nombre-contenedor: `lamp-apache-php8-sdf`
    - mapear el puerto `9000` del host al puerto `80` del contenedor.
    - mapear el volumen `./www` del host al volumen `/var/www/html` del contenedor.
 
@@ -81,20 +82,21 @@ En esta serie de pasos se debe ir creando el fichero `docker-compose.yml` que pe
 
 4. Definir dentro de fichero docker-compose una red `network`, de nombre `lamp-network`, de tipo `bridge`, y enlazar el servicio `www` definido en el punto anterior, a esta red.
    
-5. Definir dentro del fichero docker-compose un servcio para construir un contenedor para Mysql, con los siguientes datos:
+5. Definir dentro del fichero docker-compose un servicio `db` para construir un contenedor para Mysql, con los siguientes datos:
+   - nombre-servicio: `db`
+   - contenedor: `lamp-mysql-sdf`
    - nombre-imagen: `mysql:8.0`
    - mapear el puerto `3399` del host al puerto `3306` del contenedor.
    - mapear los siguientes volumenes/carpetas:
-     - `./db-data` del host a la ruta `/var/lib/mysql` del contenedor. (almacenamiento de datos)
      - `./conf` del host a la ruta `/etc/mysql/conf.d` del contenedor. (configuración de mysql)
      - `./dump` del host a la ruta `/docker-entrypoint-initdb.d` del contenedor. (scripts de inicialización de datos)
    - adjuntar a la red `lamp-network` definida en el punto anterior.
-   - definir las variables de entorno `MYSQL_ROOT_PASSWORD` con valor `root` y `MYSQL_DATABASE` con valor `lamp`, `MYSQL_USER` y `MYSQL_PASSWORD` con los valores `lamp` y `lamp` respectivamente.
+   - definir las variables de entorno `MYSQL_ROOT_PASSWORD` con valor `test` y `MYSQL_DATABASE` con valor `dbname`, y `MYSQL_USER` y `MYSQL_PASSWORD` con los valores `lamp` y `lamp` respectivamente.
    - enlazar el servicio `mysql` a la red `lamp-network` definida en el punto anterior.
 
     Pasos:
       - Levantar el docker-compose para verificar log en modo `atacched` y comprobar que todo funciona bien. `docker-compose up` (incluir imagen/gif) <br>
-      - Comprobar desde el programa `MySQL Workbench` el acceso a la BD creada `lamp` (acceder con los datos de acceso configurados) [incluir gif]
+      - Comprobar desde el programa `MySQL Workbench` el acceso a la BD creada `dbname` (acceder con los datos de acceso configurados) [incluir gif]
       - Detener/cerrar la ejecución del docker-compose (Ctrl+C).
       - Limpiar los contenedores creados y eliminar volumenes y redes. `docker-compose down -v` (incluir imagen) 
       <br>
@@ -105,8 +107,9 @@ En esta serie de pasos se debe ir creando el fichero `docker-compose.yml` que pe
 
 6. Definir dentro del fichero docker-compose un servicio para levantar el contenedor `phpmyadmin`, con los siguientes datos:
    - nombre-imagen: `phpmyadmin/phpmyadmin`
+   - contenedor: `lamp-phpmyadmin-sdf`
    - mapear el puerto `8900` del host al puerto `80` del contenedor.
-   - definir las variables de entorno, `MYSQL_ROOT_PASSWORD` con valor `root` y `MYSQL_USER` y `MYSQL_PASSWORD` con los valores `lamp` y `lamp` respectivamente.
+   - definir las variables de entorno, `MYSQL_ROOT_PASSWORD` con valor `test` y `MYSQL_USER` y `MYSQL_PASSWORD` con los valores `lamp` y `lamp` respectivamente.
    - enlazar el servicio `phpmyadmin` a la red `lamp-network` definida en el punto anterior.
 
     Pasos:
@@ -118,13 +121,16 @@ En esta serie de pasos se debe ir creando el fichero `docker-compose.yml` que pe
     Pasos:
       - Levantar el docker-compose para verificar log en modo `atacched` y comprobar que todo funciona bien. `docker-compose up` (incluir imagen/gif) <br>
       - Comprobar desde el navegador el acceso a phpMyAdmin (acceder con los datos de acceso configurados) [incluir gif]
-      - Comprobar desde phpMyAdmin el acceso a la BD creada `lamp` (acceder con los datos de acceso configurados) [incluir gif]
+      - Comprobar desde phpMyAdmin el acceso a la BD creada `dbname` (acceder con los datos de acceso configurados) [incluir gif]
       - Comprobar el acceso a la BD a través de MySQL Workbench (acceder con los datos de acceso configurados) [incluir gif]
       - Detener/cerrar la ejecución del docker-compose (Ctrl+C).
       - Limpiar los contenedores creados y eliminar volumenes y redes. `docker-compose down -v` (incluir imagen) 
 
 8. Probar el acceso a la aplicación web desde el navegador. (http://localhost:9000) [incluir gif]
-// TODO: Pendiente indicar lo que hay que comprobar en la aplicación web.
+   
+   - Navegar a la dirección `localhost:9000` desde el navegador, y comprobar que se muestra correctamente la lista de nombres [incluir gif]
+  
+<img src="../files/lamp-working.gif " width="600px" />
 
 
 
