@@ -9,7 +9,7 @@ Materiales para la docencia del módulo **Despliegue de aplicaciones web** de se
 | [UT0]()                | Introducción a las Arquitecturas Web                               |
 | [UT1](./ut1/README.md) | Documentación y sistema de control de versiones                    |
 | [UT2](./UT2/README.md) | Docker                                                             |
-| [UT3]()                | Implantación de arquitecturas web                                  |
+| [UT3](./UT3/README.md) | Implantación de arquitecturas web                                  |
 | [UT4]()                | Administración de servidores web                                   |
 | [UT5]()                | Administración de servidores de aplicaciones                       |
 | [UT6]()                | Servicios de red implicados en el despliegue de una aplicación web |
