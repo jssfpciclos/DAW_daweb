@@ -57,11 +57,13 @@
 
 1. [Introducción a Docker](doc/01.intro-docker.md)
 2. [Networking y Almacenamiento en Docker](doc/02.networking-store.md)
-3. [Docker Compose](doc/03.docker-compose.md)
+3. [Creación de imágenes Docker](doc/03.creacion-imagenes.md)
+4. [Docker Compose](doc/03.docker-compose.md)
 
 
 ## 📚 Casos prácticos
 
 1. [Ejecutar SSH en contendor](doc/caso-practico/01.ssh-container.md)
 2. [Instalar MariaDB en contendor](doc/caso-practico/02.db-container.md)
-3. [Stack LAMP con Docker](doc/caso-practico/03.lamp-docker.md)
+3. [Crear imágenes webs Python y PHP](doc/caso-practico/04.creacion-imagen-docker.md)
+4. [Stack LAMP con Docker](doc/caso-practico/03.lamp-docker.md)
