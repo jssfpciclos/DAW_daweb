@@ -8,13 +8,17 @@ En esta tarea vamos a dockerizar el stack LAMP que hemos creado en el caso prác
 - Conocer los conceptos principales sobre el despliegue de aplicaciones web utilizando contenedores.
 - Conocer los conceptos fundamentales sobre Docker.
 - Trabajar con imágenes Docker.
-- Trabajar con Docker y Docker-compose (orquestación de contenedores).
+- Trabajar con Docker y docker compose (orquestación de contenedores).
 - Desplegar aplicaciones web sencillas en contenedores.
 
 ### 🗓 Recursos
 
 - [Temario del Tema UT2](../README.md)
 - [Caso práctico: Dockerización de stack LAMP](../caso-practico/03.lamp-docker.md)
+
+**GIF Videos**
+- [Software crear GIFs animados para Windows](https://www.screentogif.com/)
+- [Herramienta Online GIF](https://ezgif.com/video-to-gif)
 
 
 ### Entregable
@@ -38,7 +42,7 @@ UT2/TE2.1/src
   +-- docker-lamp/    (código fuente de la tarea)
     |
     +-- .gitignore  (excluir ficheros no necesarios (datos de BD, etc))
-    +-- docker-compose.yml
+    +-- docker compose.yml
 ```
 
 
@@ -57,32 +61,32 @@ UT2/TE2.1/src
        - Explicar que es un DockerFile y cual es su finalidad.
        - Explicar que hace el código del DockerFile que habéis utilizado.
 
-### Definir el fichero Docker-compose
+### Definir el fichero docker compose
 
-En esta serie de pasos se debe ir creando el fichero `docker-compose.yml` que permitirá crear los contenedores necesarios para el stack LAMP, se construirá por partes, y revisando si funciona cada parte
+En esta serie de pasos se debe ir creando el fichero `docker compose.yml` que permitirá crear los contenedores necesarios para el stack LAMP, se construirá por partes, y revisando si funciona cada parte
  
 3. Definir el servicio `wwww`, que utiliza la imagen que debe construir a través del DockerFile creado en el paso anterior con los siguientes datos.<br>
    - nombre-image-crear: `daw/lamp-apache-php8-sdf:1.0`
    - nombre-contenedor: `lamp-apache-php8-sdf`
    - mapear el puerto `9000` del host al puerto `80` del contenedor.
-   - mapear el volumen `./www` del host al volumen `/var/www/html` del contenedor.
+   - mapear la carpeta `./www` del host al volumen `/var/www/html` del contenedor.
 
 
     Pasos:
-      - Levantar el docker-compose para verificar log en modo `atacched` y comprobar que todo funciona bien. `docker-compose up --build` (incluir imagen/gif) <br>
+      - Levantar el docker compose para verificar log en modo `atacched` y comprobar que todo funciona bien. `docker compose up --build` (*--build para reconstruir la imagen aunque ya exista*) (incluir imagen/gif) <br>
       - Comprobar desde otra terminal, que se ha construido la imagen indicada.
-      - Detener/cerrar la ejecución del docker-compose (Ctrl+C).
-      - Limpiar los contenedores creados y eliminar la imagen creada. `docker-compose down --rmi all` (incluir imagen) 
+      - Detener/cerrar la ejecución del docker compose (Ctrl+C).
+      - Limpiar los contenedores creados y eliminar la imagen creada. `docker compose down --rmi all` *--rmi elimina todas las imágenes creadas* (incluir imagen) 
       <br>
       *Explicación del paso:*
-          - Explicar las partes del servicio en el docker-compose definido y que hace cada apartado.
-          - ¿Qué es el modo `attached` y `detached` cuando ejecuto un contenedor o el docker-compose?
-          - Explicar que hace cada punto que se ha indicado en la configuración del servicio (build, ports,  volumes, etc).
+          - Explicar las partes del servicio en el docker compose definido y que hace cada apartado.
+          - ¿Qué es el modo `attached` y `detached` cuando ejecuto un contenedor o el docker compose?
+          - Explicar que hace cada punto que se ha indicado en la configuración del servicio (build, ports, volumes, etc).
       
 
-4. Definir dentro de fichero docker-compose una red `network`, de nombre `lamp-network`, de tipo `bridge`, y enlazar el servicio `www` definido en el punto anterior, a esta red.
+4. Definir dentro de fichero docker compose una red `network`, de nombre `lamp-network`, de tipo `bridge`, y enlazar el servicio `www` definido en el punto anterior, a esta red.
    
-5. Definir dentro del fichero docker-compose un servicio `db` para construir un contenedor para Mysql, con los siguientes datos:
+5. Definir dentro del fichero docker compose un servicio `db` para construir un contenedor para Mysql, con los siguientes datos:
    - nombre-servicio: `db`
    - contenedor: `lamp-mysql-sdf`
    - nombre-imagen: `mysql:8.0`
@@ -95,17 +99,17 @@ En esta serie de pasos se debe ir creando el fichero `docker-compose.yml` que pe
    - enlazar el servicio `mysql` a la red `lamp-network` definida en el punto anterior.
 
     Pasos:
-      - Levantar el docker-compose para verificar log en modo `atacched` y comprobar que todo funciona bien. `docker-compose up` (incluir imagen/gif) <br>
+      - Levantar el docker compose para verificar log en modo `atacched` y comprobar que todo funciona bien. `docker compose up` (incluir imagen/gif) <br>
       - Comprobar desde el programa `MySQL Workbench` el acceso a la BD creada `dbname` (acceder con los datos de acceso configurados) [incluir gif]
-      - Detener/cerrar la ejecución del docker-compose (Ctrl+C).
-      - Limpiar los contenedores creados y eliminar volumenes y redes. `docker-compose down -v` (incluir imagen) 
+      - Detener/cerrar la ejecución del docker compose (Ctrl+C).
+      - Limpiar los contenedores creados y eliminar volumenes y redes. `docker compose down -v` (incluir imagen) 
       <br>
       *Explicación del paso:*
-          - Explicar las partes del servicio en el docker-compose definido y que hace cada apartado.
+          - Explicar las partes del servicio en el docker compose definido y que hace cada apartado.
           - Explicar para qué se usan las variables en los contenedores en general y en este caso en particular.
           - Explicar que es una red de tipo `bridge` y que es una red `lamp-network`.
 
-6. Definir dentro del fichero docker-compose un servicio para levantar el contenedor `phpmyadmin`, con los siguientes datos:
+6. Definir dentro del fichero docker compose un servicio para levantar el contenedor `phpmyadmin`, con los siguientes datos:
    - nombre-imagen: `phpmyadmin/phpmyadmin`
    - contenedor: `lamp-phpmyadmin-sdf`
    - mapear el puerto `8900` del host al puerto `80` del contenedor.
@@ -113,18 +117,18 @@ En esta serie de pasos se debe ir creando el fichero `docker-compose.yml` que pe
    - enlazar el servicio `phpmyadmin` a la red `lamp-network` definida en el punto anterior.
 
     Pasos:
-     > Solo definir el servicio en el docker-compose, no levantar el docker-compose
+     > Solo definir el servicio en el docker compose, no levantar el docker compose
       <br>
 
 7. Definir la precedencia de arranque de los contenedores, de tal forma que los servicios `www` y `phpmyadmin` deben esperar a que el servicio `mysql` esté en ejecución.
    
     Pasos:
-      - Levantar el docker-compose para verificar log en modo `atacched` y comprobar que todo funciona bien. `docker-compose up` (incluir imagen/gif) <br>
+      - Levantar el docker compose para verificar log en modo `atacched` y comprobar que todo funciona bien. `docker compose up` (incluir imagen/gif) <br>
       - Comprobar desde el navegador el acceso a phpMyAdmin (acceder con los datos de acceso configurados) [incluir gif]
       - Comprobar desde phpMyAdmin el acceso a la BD creada `dbname` (acceder con los datos de acceso configurados) [incluir gif]
       - Comprobar el acceso a la BD a través de MySQL Workbench (acceder con los datos de acceso configurados) [incluir gif]
-      - Detener/cerrar la ejecución del docker-compose (Ctrl+C).
-      - Limpiar los contenedores creados y eliminar volumenes y redes. `docker-compose down -v` (incluir imagen) 
+      - Detener/cerrar la ejecución del docker compose (Ctrl+C).
+      - Limpiar los contenedores creados y eliminar volumenes y redes. `docker compose down -v` (incluir imagen) 
 
 8. Probar el acceso a la aplicación web desde el navegador. (http://localhost:9000) [incluir gif]
    
