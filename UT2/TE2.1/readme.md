@@ -50,7 +50,7 @@ UT2/TE2.1/src
 
 1. Descargar los [recursos de la tarea](res/Tarea2.1.recursos.rar) y descomprimir en una carpeta que llamaremos `docker-lamp`.
 2. Crear una imagen de Docker que incluya Apache y PHP, a partir de la imagen oficial de PHP 8.0.0 con Apache, e incluyendo el driver de MySQL para PHP.
-   1. Crear el fichero DockerFile para la creación de la imagen (Los detalles están incluidos en el [caso práctico](../caso-practico/03.lamp-docker.md)).<br>
+   1. Crear el fichero DockerFile para la creación de la imagen (Los detalles están incluidos en el [caso práctico](../doc/caso-practico/03.lamp-docker.md)).<br>
    2. Construir el DockerFile dando a la imagen `php-apache8.0-SDF` con el tag `1.0`. `docker build -t php-apache8.0-sdf:1.0 . `. (mostrar imagen que no muestra error en la creación)
    3. Mostrar que la imagen creada está disponible en el repositorio local de imágenes. `docker images`.
    4. Borrar la imagen creada.  
