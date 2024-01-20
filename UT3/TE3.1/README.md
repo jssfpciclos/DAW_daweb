@@ -1,4 +1,4 @@
-# UT2-TE3.1: Implantación de arquitecturas web
+# UT2-TE3.1: Implantación página web PHP con Nginx + PHP-FPM
 
 ### TAREA EVALUABLE
 
