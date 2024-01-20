@@ -206,13 +206,15 @@ Una vez dentro del contenedor, actualizamos el sistema y lo dejamos preparado pa
 
 ```bash
 apt update && apt upgrade -y
+# instalamos los paquetes necesarios para añadir repositorios externos
 apt install -y curl gnupg2 ca-certificates lsb-release debian-archive-keyring
-
+# Importamos la clave GPG del repositorio externo desde donde descargarnos la última versión de Nginx
 curl -fsSL https://nginx.org/keys/nginx_signing.key | gpg --dearmor -o /etc/apt/trusted.gpg.d/nginx.gpg
-
+# Añadimos el repositorio externo en cuestión y confirmamos que el repositorio está disponible tras actualizar las fuentes
 echo "deb http://nginx.org/packages/debian $(lsb_release -sc) nginx" | tee /etc/apt/sources.list.d/nginx.list > /dev/null
-
+# Actualizamos el sistema y lo dejamos preparado para instalar Nginx
 apt update
+# Instalamos Nginx
 apt install -y nginx
 ```
 
@@ -267,7 +269,7 @@ CMD ["/usr/sbin/nginx", "-g", "daemon off;"]
 Guardamos el fichero como `dockerfile` (sin extensión) y lo construimos:
 
 ```bash
-# Actualizamos el sistema y lo dejamos preparado para instalar Nginx:
+# Crea la imagen a partir del DockerFile, y le da el nombre iessdf/nginx
 docker build -t iessdf/nginx .
 ```
 
@@ -279,13 +281,13 @@ Una podemos crear un contenedor a partir de la imagen que acabamos de crear. Pod
     docker run -d --name nxnative -p 80:80 --hostname srvnx iessdf/nginx
     docker exec -it nxnative bash
     ```
-2. Ejecutar de format interactiva y conectar a la vez que se crea el contenedor:
+2. Ejecutar de forma interactiva y conectar a la vez que se crea el contenedor:
 
     ```bash
     docker run -it --name nxnative -p 80:80 --hostname srvnx iessdf/nginx bash
     ```
 
-Si más adelante necesitamos parar el contenedor, y volver a entrar:
+Si más adelante necesitamos iniciar el contenedor, y volver a entrar:
 
 ```bash
 docker start nxnative && docker exec -it nxnative bash
@@ -384,7 +386,7 @@ Lo primero que hay que hacer es permitir que el usuario `nginx` tenga acceso al 
 ```bash
 :~$ nano /etc/php/8.3/fpm/pool.d/www.conf
 ```
-
+Buscar las líneas en el fichero de configuración y cambiarlas por:
 ```ini
 23| user = nginx
 24| group = nginx
@@ -464,7 +466,7 @@ Abrimos un navegador en la ruta especificada `localhost/index.php` y veremos la 
 
 ### PHP dockerizado
 
-Como vamos a poder comprobar, todo lo complejo y tedioso que ha sido instalar PHP-FPM en el sistema de forma manual, se simplifica enormemente con Docker.
+Como vamos a poder comprobar, todo lo complejo y tedioso que ha sido instalar PHP-FPM en el sistema de forma manual, se simplifica enormemente con una imagen de Docker que ya tenga instalado PHP-FPM.
 
 Para este escenario es necesario "componer" dos servicios, ya que mientras antes ambos servicios estaban instalados en el mismo ordenador, ahora vamos a tenerlos en dos contenedores diferentes:
 
@@ -562,19 +564,6 @@ app-web-1      | 2022/09/21 10:22:20 [notice] 1#1: start worker process 30
 
 > ⚠️ &nbsp;Si el comando anterior da un error de tipo "bind: address already in use" es posible que tengas Nginx nativo funcionando. Puedes pararlo con: `sudo systemctl stop nginx`.
 
-Si dejamos este proceso corriendo y abrimos otra pestaña de la terminal, podemos comprobar que la aplicación PHP está funcionando correctamente:
-
-```bash
-:~/dev/app$ firefox localhost
-```
+Si dejamos este proceso corriendo y abrimos un navegador en http://localhost veremos la página de bienvenida de Nginx.
 
 ![PHP Info](res/files/php-info-docker.png)
-
-De hecho podemos también visualizar los servicios que están corriendo dentro de esta "composición", utilizando el siguiente comando:
-
-```bash
-:~/dev/app$ docker compose ps
-NAME                COMMAND                  SERVICE             STATUS              PORTS
-app-php-fpm-1       "docker-php-entrypoi…"   php-fpm             running             9000/tcp
-app-web-1           "/docker-entrypoint.…"   web                 running             0.0.0.0:80->80/tcp, :::80->80/tcp
-```
