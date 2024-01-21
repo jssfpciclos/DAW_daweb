@@ -167,6 +167,39 @@ Los nombres y direcciones de internet que conocemos se basan en un sistema llama
 
 Existe la posibilidad de funcionar con una **dirección IP dinámica** mediante sistemas como DDNS (Dynamic DNS) que mantienen siempre actualizada nuestra dirección. Un servicio gratuito de DDNS es [Duck DNS](https://www.duckdns.org/).
 
+
+## Introducción Ngix Web Server
+
+
+### 8 razones para usar Nginx
+
+1. **Rendimiento**: Nginx está diseñado para ser rápido y eficiente. Es capaz de manejar miles de conexiones simultáneas con un uso mínimo de recursos.
+2. **Escalabilidad**: Nginx es fácilmente escalable. Puede manejar fácilmente un aumento en el tráfico simplemente agregando más hardware.
+3. **Fiabilidad**: Nginx es muy estable. Es muy raro que se bloquee o se caiga.
+4. **Facil de instalar, configurar y mantener**: Nginx es fácil de instalar y configurar. La configuración se realiza mediante archivos de texto plano que son fáciles de leer y comprender. El mantenimiento es fácil porque Nginx es muy estable y no requiere reinicios frecuentes.
+5. **Fácil de usar**: Nginx es fácil de usar. La configuración se realiza mediante archivos de texto plano que son fáciles de leer y comprender.
+6. **Balanceador de carga y proxy inverso**: Nginx se puede utilizar como balanceador de carga y proxy inverso. Esto significa que puede distribuir el tráfico entre varios servidores web y servidores de aplicaciones.
+7. **Bajo uso de recursos**: Nginx requiere muy pocos recursos para ejecutarse. Esto significa que puede ejecutarlo en hardware más barato y con menos recursos.
+8. **Soporte para múltiples plataformas**: Nginx se ejecuta en Linux, BSD, Mac OS X, Solaris, AIX y otros sistemas operativos.
+
+
+### Principales características de Nginx
+
+- **Más que solo un servidor web**: Nginx se puede utilizar como servidor web, servidor proxy, balanceador de carga, servidor de correo electrónico y servidor de caché.
+  - Un proxy-inverso es un tipo de servidor proxy que recupera recursos en nombre de un cliente desde uno o más servidores. Estos recursos se devuelven al cliente como si se hubieran originado en el propio servidor.
+- **Diseño modular**: Nginx está diseñado con un diseño modular. Esto significa que puede ampliar fácilmente la funcionalidad de Nginx agregando nuevos módulos.
+  - SSL y compresión son módulos que se pueden agregar a Nginx.
+  - Al ser código abierto, se puede reconstrutir desde cero con los módulos que necesitemos, esto permite que sea muy ligero y rápido. 
+  > 🤚 El único inconveniente, es que si se decida incorporar un nuevo módulo más adelante, se requere volver a compilarlo, pero esto no es un problema en la mayoría de los casos, ya que Ngix permite se actualizado sin necesidad de parar el servicio.
+
+- **Asincrono**: Nginx utiliza un modelo de procesamiento asíncrono y no bloqueante. Esto significa que puede manejar miles de conexiones simultáneas con un uso mínimo de recursos. Diferente a Apache y IIS que utilizan modelos de hilos (Thread) en paralelo, que requieren más recursos. Ngix se basa en un único hilo utilizando eventos, con lo que la eficiencia es mucho mayor.
+
+- **Soporte para múltiples protocolos**: Nginx admite HTTP, HTTPS, SMTP, POP3 y IMAP.
+- **HTTP Video Streaming**: Nginx admite la transmisión de video HTTP. Esto significa que puede usar Nginx para transmitir videos en línea.
+- **Monitorización y Logging extendido**: Conocer el motivo de un error es fundamental para poder solucionarlo. Nginx permite monitorizar y loguear todo lo que ocurre en el servidor, y además permite configurar alertas para que nos avise cuando ocurra un error o un evento importante.
+
+
+
 ## 🐳 Instalación y configuración básica de un servidor web
 
 <img src="res/files/nginx-logo.png" width="300px"><br>
@@ -222,7 +255,7 @@ Una vez instalado, podemos comprobar la versión de Nginx instalada:
 
 ```bash
 # -v para ver la versión, -V para ver la versión y los módulos instalados
-nginx -v 
+nginx -V 
 ```
 
 Y podemos comprobar que el servicio está corriendo:
