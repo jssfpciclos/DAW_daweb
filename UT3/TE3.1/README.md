@@ -23,12 +23,22 @@ Se entregará un PDF (en moodle) con el siguiente formato:
 2. Incluir [esta imagen de la calculadora](./images/calculadora.png).
 3. Incluir un fichero `.css` con unos estilos básicos.
 
+
+## Entorno dockerizado
+
+1. Crear un fichero `docker-compose.yml` con los siguientes servicios:
+   - Servicio web con Nginx
+   - Servicio PHP-FPM
+
+2. Crear un fichero `dockerfile` para crear la imagen de PHP-FPM, que incluya la app PHP (calculadora), con todos los ficheros necesarios para que funcione la aplicación. 
+3. Genera la imagen a través del fichero `dockerfile` y que esta imagen se genere al levantar el escenario con docker-compose. (`docker-compose up`)
+
+
 ### Estructura de directorios
 
 ```
 UT3\TE3.1
 ├── app
-│   ├── calculadora.php
 |   ├── images
 │   │   └── calculadora.png
 │   ├── index.php
