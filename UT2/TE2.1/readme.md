@@ -19,6 +19,7 @@ En esta tarea vamos a dockerizar el stack LAMP que hemos creado en el caso prác
 **GIF Videos**
 
 - [Software crear GIFs animados para Windows](https://www.screentogif.com/)
+- [Software crear GIFs animados para Linux](https://github.com/phw/peek)
 - [Herramienta Online GIF](https://ezgif.com/video-to-gif)
 
 ### Entregable
