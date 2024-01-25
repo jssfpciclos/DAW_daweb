@@ -1,11 +1,14 @@
 # UT3: Implantación de arquitecturas web
 
-[La arquitectura web y algunos modelos](#la-arquitectura-web-y-algunos-modelos)  
-[Servidores web](#servidores-web)  
-[Instalación y configuración básica de un servidor web](#instalación-y-configuración-básica-de-un-servidor-web)  
-[Servidores de aplicaciones](#servidores-de-aplicaciones)
+[1. La arquitectura web y algunos modelos](#la-arquitectura-web-y-algunos-modelos)  
+[2. Servidores web](#servidores-web)  
+[3. Tecnologías asociadas a las Aplicaciones Web](#3-tecnologías-asociadas-a-las-aplicaciones-web)
+[4. Tipos de Aplicaciones Web](#4-tipos-de-aplicaciones-web)  
+[5. Introducción Ngix Web Server](#5-introducción-ngix-web-server)  
+[6. Instalación y configuración básica de un servidor web](#instalación-y-configuración-básica-de-un-servidor-web)  
+[7. Servidores de aplicaciones](#servidores-de-aplicaciones)
 
-## La arquitectura web y algunos modelos
+## 1. La arquitectura web y algunos modelos
 
 Una aplicación web necesita de una estructura que permita su acceso desde diferentes lugares (máquinas). Esta estructura es lo que se denomina **Arquitectura Web** (realmente este nombre se da también al diseño de toda la estructura).
 
@@ -88,7 +91,7 @@ El orden correcto para el desarrollo es empezar de abajo a arriba (**enfoque bot
 
 <img src="res/images/workflow-dev.svg" width="600px">
 
-## Servidores web
+## 2. Servidores web
 
 Un **servidor web** es un programa o conjunto de ellos que proporciona un servicio a través de una red. La comunicación con un servidor web suele hacerse mediante el protocolo _http (hypertext transfer protocol)_ que está englobado en la **capa de aplicación** del [modelo OSI](https://es.wikipedia.org/wiki/Modelo_OSI).
 
@@ -167,8 +170,106 @@ Los nombres y direcciones de internet que conocemos se basan en un sistema llama
 
 Existe la posibilidad de funcionar con una **dirección IP dinámica** mediante sistemas como DDNS (Dynamic DNS) que mantienen siempre actualizada nuestra dirección. Un servicio gratuito de DDNS es [Duck DNS](https://www.duckdns.org/).
 
+### Servidores web más populares
 
-## Introducción Ngix Web Server
+Algunos de los servidores web más utilizados son los siguientes:
+
+- **Servidor HTTP Apache**
+    
+    Es un servidor web gratuito y de código abierto que se utiliza en muchos sistemas operativos, como Windows, Linux y Mac OS X. **[Apache](https://www.hostinger.es/tutoriales/que-es-apache/)** es el software de servidor web más antiguo y uno de los más utilizados por los propietarios de páginas web, desarrolladores y proveedores de hosting, con una **[cuota de mercado](https://w3techs.com/technologies/details/ws-apache)** de más del **31%**.
+    
+- **NGINX**
+    
+    Es un famoso software de servidor web de código abierto que inicialmente sólo funcionaba para el servicio web HTTP. Ahora también se utiliza como proxy inverso, balanceador de carga HTTP y proxy de correo electrónico.
+    
+    NGINX es conocido por su velocidad y su capacidad para manejar múltiples conexiones, por lo que muchos sitios web de alto tráfico utilizan sus servicios.
+    
+- **IIS:** (**Internet Information Services) de Microsoft**
+    
+    **[IIS](https://www.iis.net/)** es un software de servidor web cerrado desarrollado por Microsoft y ampliamente utilizado en los sistemas operativos Windows.
+    
+- **Lighttpd**
+    
+    Es un software de servidor web gratuito y de código abierto que es conocido por su velocidad y por requerir menos potencia de la CPU. **[Lighttpd](https://www.lighttpd.net/)** también es popular por tener una pequeña huella de memoria.
+    
+    En el ámbito del hosting, los distintos hosts soportan diferentes tipos de servidores web. Por ejemplo, **[Hostinger soporta](https://www.hostinger.es/tecnologia)** tanto Apache como NGINX, los dos servidores web líderes en el mercado.
+
+
+
+## 3. Tecnologías asociadas a las Aplicaciones Web
+
+- **Tecnologías en el lado del servidor:**
+
+    - **CGI (Common Gateway Interface):** la "Interface Común de Entrada" es uno de los estándares más antiguos relacionado con las aplicaciones web. Está pensado para permitir que un cliente web pueda acceder a un programa que se ejecuta en un servidor web, donde este generará contenido dinámico**. Este estándar** es utilizado para acceder a información almacenada en bases de datos, para implementar motores de búsqueda, gestionar datos de formularios, generar emails de forma automática, foros, comercio electrónico, juegos en línea, . Las rutinas de CGI  son habitualmente escritas en lenguajes interpretados como Perl o por lenguajes compilados como C.
+    - **ASP (Active Server Pages):** se ejecutan del lado del servidor, de este modo se forman los resultados que luego se mostrarán en el navegador de cada equipo cliente en virtud de la petición que se ha realizado. Un buen ejemplo de ello son los buscadores, donde un usuario realiza una petición de información y el servidor IIS nos entrega un resultado a medida de nuestra petición. Existen versiones de  para Unix y Linux, a pesar de que fue una tecnología desarrollada por Microsoft para la creación dinámica de páginas web ofrecida junto a su servidor . Hoy en día ASP ha evolucionado hasta **[ASP.NET](https://educacionadistancia.juntadeandalucia.es/formacionprofesional/pluginfile.php/56055/mod_scorm/content/0/#t400435e4-6cc1-a372-f808-37a0ae5f511e)**, y se ha convertido en un framework de desarrollo web libre.
+    - **PHP (Hypertext Preprocessor):** este lenguaje es, al igual que ASP, ejecutado en el lado del servidor. PHP  es similar a ASP y puede ser usado en circunstancias similares. Es muy eficiente, permitiendo el acceso a bases de datos empleando servidores como **[MySQL](https://es.wikipedia.org/wiki/MySQL)** y, por lo tanto, suele utilizarse para crear páginas dinámicas complejas.
+    - **Java:** en el ecosistema de Java existe un conjunto de tecnologías pensadas para desarrollo de aplicaciones web que se ejecutan en el lado del servidor, generalmente enmarcadas en lo que se conoce como Java EE (Java Enterprise Edition). Las tecnologías más conocidas en el entorno web de Java son JSP (JavaServer Pages), JSF (JavaServer Faces) y los **servlets**. JSP es en conceptualmente similar a PHP y ASP, pero con el trasfondo de java.
+    - **JavaScript**: dentro de la idea de "full stack development", en la que se persigue que un mismo desarrollador o desarrolladora pueda implementar tanto la parte que se ejecuta en el servidor (back-end) como la página que se visualiza en el cliente (front-end), han surgido cada vez más tecnologías que permiten desarrollar en JavaScript aplicaciones web que se ejecutan en el servidor (la misma usada en el navegador web), como es el caso de Express.js y Hapi.js (ambos funcionan sobre Node.js), y Meteor.js. Pero esta idea no es nueva, ya en 1995 el servidor web Netscape Enterprise Server ya contemplaba el uso de javascript en el servidor (server-side javascript).
+
+- **Lenguajes y Tecnologías en el lado del cliente:**
+  
+    - **Lenguajes**
+        - **HTML (HiperText Markup Language)**: como es de suponer, ya sabrás que HTML es el lenguaje de marcas que se utiliza maquetar el contenido de una página web. Hoy día HTML va por la versión 5 ().
+        - **CSS (Cascading Style Sheets):** las CSS "Hojas de Estilo en Cascada" se usan para formatear las páginas web; se trata de separar el contenido de un documento de su presentación. Cualquier cambio en el estilo marcado para un elemento en el CSS afectará a todas las páginas vinculadas a esa página.
+        - **Java**: es un lenguaje que también podemos encontrarlo en el lado del cliente, ejecutándose de forma incrustada en un navegador web. A las aplicaciones Java que se pueden embeber en una página web se las conoce como "applets". (muy en desuso)
+        - **JavaScript:** posiblemente el uso más extendido de este lenguaje es hacer las páginas web más interactivas. Es un lenguaje que como ya se introdujo antes, puede interpretarse y ejecutarse en un navegador web. Es útil para realizar tareas tales como mover imágenes por la pantalla, crear menús de navegación interactivos, juegos, . En las páginas web suele preferirse JavaScript porque es aceptado por muchos más navegadores que  (creado por Microsoft).
+- 
+    - **Tecnologías**
+        - **Client Side Rendering (CSR):** El renderizado se produce en el cliente. En la primera carga de la página, el servidor devuelve todo el código en Javascript. El resto de peticiones con el servidor son para intercambiar datos.
+        - **Server Side Rendering (SSR):** Es la técnica habitual que que se ha utilizado desde el inicio de la Web. Aunque pueda parecer que está pensado con las últimas tecnologías. 
+        Cuándo el navegador solicita una página web, está es creada desde el servidor compilando todo el código y los datos y devuelve una página HTML completa. Los datos son actualizados dinámicamente en cada solicitud del navegador, es por eso que en este tipo de sitios web debemos recargar constantemente para obtener la última versión.
+        - **Static Site Generation (SSG):**
+            
+            Los sitios web estáticos no son más que sitios web que funcionan con HTML, CSS y JavaScript y no requieren de código de servidor para funcionar. Se denominan **estáticos** porque todos los datos están incrustados directamente en el código. Si bien utilizando solamente con archivos HTML podemos crear sitios estáticos pero al tener un nuestro proyecto más grande como un blog no resulta cómodo, es por eso que existen herramientas que nos permiten compilar a HTML y separar lógica en componente que podemos reutilizar.
+            
+            Para actualizar nuevos datos de nuestra página web, requerirá de una nueva compilación de todo el proyecto aún si es mínimo el cambio.
+
+
+
+## 4. Tipos de Aplicaciones Web
+
+Aunque se denomina aplicación web, no toda web es una aplicación. En los últimos años el desarrollo web ha evolucionado mucho.
+
+### **¿Qué es una aplicación web?**
+
+Una **aplicación web o web app** es una versión de una página web que ha sido optimizada, normalmente por un equipo de desarrollo, para poder ser utilizada desde un teléfono móvil. Gracias a esto se adapta a cualquier dispositivo.
+
+Estas son **4 características de una aplicación web** que te ayudarán a diferenciarlas de otros tipos de apps:
+
+- Requieren un único desarrollo para cualquier dispositivo. Un mismo desarrollo en HTML5 es suficiente para cualquier sistema operativo.
+- No es necesario descargarlas. La aplicación se aloja en un servidor y se accede a ella a partir de un navegador. Esto significa que es necesario estar conectado para acceder a ella.
+- Son accesibles desde cualquier navegador. Si tienes un navegador instalado en el dispositivo (Firefox, Safari, Chrome…) podrás acceder a la aplicación web.
+- Aparecen como resultado en los buscadores tradicionales. Al no necesitar descarga no las encontrarás en las *app stores*, pero sí aparecerán como resultado en motores como Google.
+- Actualmente las WebApp pueden aparecer en los móviles como una App normal en el escritorio del dispositivo.
+
+Aunque las **aplicaciones nativas** permiten desarrollos más complejos, también son más costosos y no siempre necesarios. **La decisión dependerá del uso que se vaya a hacer de la aplicación**.
+
+### **Tipos de aplicaciones web**
+
+En esta ocasión queremos hacer **una clasificación de los tipos de web apps**. Esta clasificación se hará dependiendo de la función de cómo se presentan las web apps con el contenido que deben mostrar.
+
+En la actualidad, definir los **distintos tipos de aplicaciones web** puede ser algo complicado, ya que cada vez están más integradas y las líneas son más difusas, pero podemos diferenciarlas en **4 grandes grupos.**
+
+- **1. Aplicaciones Web Estáticas.** Las web app estáticas son las que muestran un único contenido y no se interactúa con ella nada o prácticamente nada. Por ejemplo, un curriculum o una web empresarial con los teléfonos y la dirección serían algunos de los casos.
+    
+    Si optamos por **crear una app web estática**, lo primero que debemos saber es que este tipo de web app muestran poca información y no suele cambiar mucho.
+    
+    Por regla general suelen estar **desarrolladas en HTML y CSS,** aunque también se pueden mostrar en alguna parte de la aplicación web objetos en movimiento como por ejemplo banners, GIF animados o vídeos. También se puede hablar de **desarrollo de aplicaciones web con jQuery y Ajax**.
+    
+    *Un portfolio, un curriculum digital o una página de presentación de empresa serían ejemplos de aplicaciones web estáticas.*
+    
+    Modificar los contenidos de las apps estáticas no es sencillo. Para hacerlo es necesario **editar el HTML y actualizarlo en el servidor**. Estos cambios serán, normalmente, responsabilidad del *webmaster* o de la empresa de desarrollo que programó el diseño de la web app.
+    
+- **2. Aplicaciones Web Dinámicas.** En las web apps dinámicas el usuario puede interactuar mucho más que con los sitios estáticos. Por ejemplo, puede registrarse para acceder a su cuenta, puede modificar parámetros o incluso publicar información. El ejemplo más claro de aplicación web dinámica sería un foro.
+Las **aplicaciones web dinámicas** son mucho más complejas a nivel técnico. Utilizan **bases de datos para cargar a información** y estos contenidos se actualizan cada vez que el usuario accede a la web app.
+    
+    Existen muchos **lenguajes de programación para el desarrollo de aplicaciones web dinámicas**. Los lenguajes **PHP,**  **Java, C#**, … son los más comunes porque permiten una buena estructuración del contenido.
+    
+    *Las aplicaciones web dinámicas suelen contar con un panel de administrador (CMS) para realizar cambios.*
+
+
+
+## 5. Introducción Ngix Web Server
 
 
 ### 8 razones para usar Nginx
@@ -200,7 +301,7 @@ Existe la posibilidad de funcionar con una **dirección IP dinámica** mediante 
 
 
 
-## 🐳 Instalación y configuración básica de un servidor web
+## 6. 🐳 Instalación y configuración básica de un servidor web
 
 <img src="res/files/nginx-logo.png" width="300px"><br>
 
@@ -485,6 +586,7 @@ Una vez finalizado todo, y si todo está ok, podemos acceder a http://localhost/
 Creamos un fichero PHP que contendrá un sencillo código mostrando la información de la instalación:
 
 ```bash
+# Generar un fichero muy simple index.php con el contenido "<?php phpinfo(); ?>", y lo guarda en /usr/share/nginx/html/index.php. 
 :~$ echo "<?php phpinfo(); ?>" | tee /usr/share/nginx/html/index.php
 ```
 
