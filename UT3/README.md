@@ -1,12 +1,37 @@
+<!-- omit in toc -->
 # UT3: Implantación de arquitecturas web
 
-[1. La arquitectura web y algunos modelos](#la-arquitectura-web-y-algunos-modelos)  
-[2. Servidores web](#servidores-web)  
-[3. Tecnologías asociadas a las Aplicaciones Web](#3-tecnologías-asociadas-a-las-aplicaciones-web)
-[4. Tipos de Aplicaciones Web](#4-tipos-de-aplicaciones-web)  
-[5. Introducción Ngix Web Server](#5-introducción-ngix-web-server)  
-[6. Instalación y configuración básica de un servidor web](#instalación-y-configuración-básica-de-un-servidor-web)  
-[7. Servidores de aplicaciones](#servidores-de-aplicaciones)
+<!-- omit in toc -->
+#### Índice
+
+- [1. La arquitectura web y algunos modelos](#1-la-arquitectura-web-y-algunos-modelos)
+  - [Un modelo simple para el despliegue de aplicaciones web](#un-modelo-simple-para-el-despliegue-de-aplicaciones-web)
+  - [¿Qué es una aplicación web?](#qué-es-una-aplicación-web)
+  - [Fases de un proyecto de aplicación web](#fases-de-un-proyecto-de-aplicación-web)
+- [2. Servidores web](#2-servidores-web)
+  - [Servicios web](#servicios-web)
+  - [Alternativas](#alternativas)
+  - [¿Qué necesito para montar un servidor web?](#qué-necesito-para-montar-un-servidor-web)
+  - [Servidores web más populares](#servidores-web-más-populares)
+  - [Apache vs Nginx](#apache-vs-nginx)
+- [3. Tecnologías asociadas a las Aplicaciones Web](#3-tecnologías-asociadas-a-las-aplicaciones-web)
+- [4. Tipos de Aplicaciones Web](#4-tipos-de-aplicaciones-web)
+  - [¿Qué es una aplicación web?](#qué-es-una-aplicación-web-1)
+  - [Tipos de aplicaciones web](#tipos-de-aplicaciones-web)
+- [5. Introducción Ngix Web Server](#5-introducción-ngix-web-server)
+  - [8 razones para usar Nginx](#8-razones-para-usar-nginx)
+  - [Principales características de Nginx](#principales-características-de-nginx)
+- [6. 🐳 Instalación y configuración básica de un servidor web](#6--instalación-y-configuración-básica-de-un-servidor-web)
+  - [Instalación nativa](#instalación-nativa)
+  - [Creación de un DockerFile para recrear la imagen](#creación-de-un-dockerfile-para-recrear-la-imagen)
+- [7. Servidores de aplicaciones](#7-servidores-de-aplicaciones)
+  - [PHP nativo](#php-nativo)
+  - [PHP dockerizado](#php-dockerizado)
+
+
+
+
+
 
 ## 1. La arquitectura web y algunos modelos
 
@@ -141,6 +166,7 @@ Antes de decidirnos a instalar nuestro propio servidor web, debemos tener en cue
 
 Por otro lado la máquina que necesitamos podría requerir mucha RAM y capacidad de almacenamiento además de soportar grandes cargas de trabajo. La conexión a internet también deberá ser potente y necesitaremos contratar una dirección IP estática.
 
+<!-- omit in toc -->
 #### Hosting
 
 Lo primero que se debe tener en cuenta es si nos interesa tener **nuestro propio servidor** o contratar un **servicio de hosting**. Realmente el término "Web Hosting" incluye el tener un servidor propio, pero en la actualidad se utiliza para denominar el alquilar espacio y recursos en un servidor de otra compañía. Generalmente esta compañía está dedicada a ello específicamente. Las ventajas de este caso son las obvias: no tenemos que preocuparnos de adquirir ni mantener ni el hardware ni el software necesario. Además la fiabilidad del servicio de una empresa especializada suele ser muy alta.
@@ -150,6 +176,7 @@ Los términos que se suelen manejar en este contexto son:
 - **On-premise** para infraestructuras montadas en la propia organización.
 - **Cloud** para infraestructuras alojadas en empresas de terceros.
 
+<!-- omit in toc -->
 #### Wordpress
 
 Existen casos en los que incluso hay tecnologías más específicas que puede satisfacer nuestras necesidades. Es más habitual la existencia de sitios web en los que la apariencia no cambia pero el contenido es actualizado constantemente. Para estos casos se puede usar un **gestor de contenidos** (CMS). Con ellos se permite al usuario actualizar la información del sitio sin necesidad de que tenga conocimientos web concretos. Existen muchos gestores web, algunos comerciales y otros gratuitos y de código abierto. En este último apartado destaca por encima de todos [Wordpress](https://es.wordpress.org/), que empezó siendo una plataforma para alojar blogs pero hoy en día ya es un servicio de propósito general (webs, blogs, aplicaciones, etc.).
@@ -195,6 +222,36 @@ Algunos de los servidores web más utilizados son los siguientes:
     En el ámbito del hosting, los distintos hosts soportan diferentes tipos de servidores web. Por ejemplo, **[Hostinger soporta](https://www.hostinger.es/tecnologia)** tanto Apache como NGINX, los dos servidores web líderes en el mercado.
 
 
+### Apache vs Nginx
+
+¿ Cuál es la diferencia entre Apache y Nginx ?
+
+**Similaridades**
+
+- Ambos son servidores web de código abierto.
+- Amplia comunidad de usuarios y desarrolladores.
+- Permiten agregar funcionalidad a través de módulos.
+- Ambos permiten actuar como servidor proxy, permite pasar información a otras aplicaciones y devolver esta información al usuario (cliente).
+- Procesamiento basado en eventos para conexiones simulateneas (últimas versiones de apache).
+
+
+**Diferencias**
+
+Puntos | Apache | Nginx
+---|---|---
+Configuración | Sintaxis XML | Sintaxis estilo C
+Configuración | Fichero .htaccess configuración distribuida en muchas carpetas | Bloques de configuración en un único fichero
+Contenido dinámico | Nativamente procesado con módulos, eliminando la necesidad de otras aplicaciones (PHP, Perl, Python, ...) | Requiere de procesamiento externo a través de otras aplicaciones
+Contenido estático | Menos eficiente | Más eficiente (más del doble de rápido)
+Cache y balanceo de carga | A través de módulos (conf. compleja) | Capacidades nativas (sencilla)
+
+
+**¿ Poqué deberíamos usar Nginx ?**
+
+- Rapidamente se ha convertido en el servidor web más popular del mundo.
+- Eficiente y consistente bajo un uso intensivo.
+- Fácil de configurar y mantener.
+
 
 ## 3. Tecnologías asociadas a las Aplicaciones Web
 
@@ -230,7 +287,7 @@ Algunos de los servidores web más utilizados son los siguientes:
 
 Aunque se denomina aplicación web, no toda web es una aplicación. En los últimos años el desarrollo web ha evolucionado mucho.
 
-### **¿Qué es una aplicación web?**
+### ¿Qué es una aplicación web?
 
 Una **aplicación web o web app** es una versión de una página web que ha sido optimizada, normalmente por un equipo de desarrollo, para poder ser utilizada desde un teléfono móvil. Gracias a esto se adapta a cualquier dispositivo.
 
@@ -244,7 +301,7 @@ Estas son **4 características de una aplicación web** que te ayudarán a di
 
 Aunque las **aplicaciones nativas** permiten desarrollos más complejos, también son más costosos y no siempre necesarios. **La decisión dependerá del uso que se vaya a hacer de la aplicación**.
 
-### **Tipos de aplicaciones web**
+### Tipos de aplicaciones web
 
 En esta ocasión queremos hacer **una clasificación de los tipos de web apps**. Esta clasificación se hará dependiendo de la función de cómo se presentan las web apps con el contenido que deben mostrar.
 
@@ -327,10 +384,15 @@ En este tema, vamos a aprender cómo se instala de forma nativa (directamente so
 Vamos a utilizar la versión base de Debian 11 (Bullseye) para instalar Nginx. 
 
 ```bash
-# Damos el nombre nxnative al contenedor, ponemos como hostname (nombre servidor) srvnx, y ejecutamos en modo interactivo
+# Damos el nombre nxnative al contenedor, ponemos como hostname (nombre servidor) srvnx, y posteriormente ejecutamos en modo interactivo
 # Vinculamos el puerto 80 del contenedor con el puerto 80 del host
+# --rm: Eliminar el contenedor cuando se detenga
+# --hostname: Asignar nombre al servidor
+# -it: Modo interactivo ==> y ejecutar bash (último parámetro)
 docker run -it --rm --name nxnative -p 80:80 --hostname srvnx debian:bullseye-slim bash
 ```
+
+> 💡 Al utilizar la opción --rm, al salir del contenedor este se elimina.
 
 Una vez dentro del contenedor, actualizamos el sistema y lo dejamos preparado para instalar Nginx:
 
@@ -403,8 +465,8 @@ CMD ["/usr/sbin/nginx", "-g", "daemon off;"]
 Guardamos el fichero como `dockerfile` (sin extensión) y lo construimos:
 
 ```bash
-# Crea la imagen a partir del DockerFile, y le da el nombre iessdf/nginx
-docker build -t iessdf/nginx .
+# Crea la imagen a partir del DockerFile, y le da el nombre sdf/nginx
+docker build -t sdf/nginx .
 ```
 
 Una podemos crear un contenedor a partir de la imagen que acabamos de crear. Podemos hacerlo de 2 formas:
@@ -412,13 +474,13 @@ Una podemos crear un contenedor a partir de la imagen que acabamos de crear. Pod
 1. Ejecutar en segundo plano, y conectarnos a posteriori:
 
     ```bash
-    docker run -d --name nxnative -p 80:80 --hostname srvnx iessdf/nginx
+    docker run -d --name nxnative -p 80:80 --hostname srvnx sdf/nginx
     docker exec -it nxnative bash
     ```
 2. Ejecutar de forma interactiva y conectar a la vez que se crea el contenedor:
 
     ```bash
-    docker run -it --name nxnative -p 80:80 --hostname srvnx iessdf/nginx bash
+    docker run -it --name nxnative -p 80:80 --hostname srvnx sdf/nginx bash
     ```
 
 Si más adelante necesitamos iniciar el contenedor, y volver a entrar:
@@ -431,7 +493,7 @@ docker start nxnative && docker exec -it nxnative bash
 Ahora al igual que antes, podemos acceder a http://localhost y si todo funciona bien, podemos ver la página de bienvenida de Nginx.
 
 
-## Servidores de aplicaciones
+## 7. Servidores de aplicaciones
 
 Un servidor de aplicaciones es un paquete software que proporciona servicios a las aplicaciones tales como seguridad, servicios de datos, soporte para transacciones, balanceo de carga y gestión de sistemas distribuidos.
 
@@ -507,7 +569,7 @@ PHP 8.3.0-dev (cli) (built: Sep 21 2021 10:22:20) ( NTS )
 Copyright (c)
 ...
 ```
-
+<!-- omit in toc -->
 #### Habilitando PHP en Nginx
 
 Nginx es un servidor web que sirve ficheros pero "no sabe" manejar código escrito en PHP (u otros lenguajes). Es por ello que necesitamos un procesador (servidor de aplicación) como PHP-FPM.
@@ -580,7 +642,7 @@ Una vez finalizado todo, y si todo está ok, podemos acceder a http://localhost/
 > Comandos para monitorizar el sistema:<br>
 > - `tail -f /var/log/nginx/error.log` para ver los logs de Nginx en tiempo real.<br>
 
-
+<!-- omit in toc -->
 #### Primera aplicación web en PHP
 
 Creamos un fichero PHP que contendrá un sencillo código mostrando la información de la instalación:
@@ -611,24 +673,22 @@ Para este escenario es necesario "componer" dos servicios, ya que mientras antes
 La estructura del "proyecto" quedaría así:
 
 ```bash
-:~/dev/app$ tree
+:~/UT3/EC/php-dockerizado$ tree
 .
 ├── default.conf
 ├── docker-compose.yml
 └── src
     └── index.php
-
-1 directory, 4 res/files
 ```
 
 La composición de servicios en Docker se lleva a cabo mediante la herramienta [docker compose](https://docs.docker.com/compose/) usando un fichero de configuración en formato [yaml](https://es.wikipedia.org/wiki/YAML):
 
 ```yaml
 version: "3.8"
-
+name: UT3-Ejercicio-PHP-Dockerizado
 services:
   web:
-    image: nginx
+    image: nginx:1.25  # imagen oficial Nginx, versión 1.25
     volumes:
       - ./src:/etc/nginx/html # "root" por defecto en Nginx
       - ./default.conf:/etc/nginx/conf.d/default.conf
