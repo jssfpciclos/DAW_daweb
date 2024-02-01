@@ -30,9 +30,6 @@
 
 
 
-
-
-
 ## 1. La arquitectura web y algunos modelos
 
 Una aplicación web necesita de una estructura que permita su acceso desde diferentes lugares (máquinas). Esta estructura es lo que se denomina **Arquitectura Web** (realmente este nombre se da también al diseño de toda la estructura).
@@ -689,6 +686,7 @@ name: UT3-Ejercicio-PHP-Dockerizado
 services:
   web:
     image: nginx:1.25  # imagen oficial Nginx, versión 1.25
+    container_name: nginx
     volumes:
       - ./src:/etc/nginx/html # "root" por defecto en Nginx
       - ./default.conf:/etc/nginx/conf.d/default.conf
@@ -697,6 +695,7 @@ services:
 
   php-fpm:
     image: php:8-fpm   # imagen oficial PHP que incorporar soporte para FPM
+    container_name: php-fpm
     volumes:
       - ./src:/etc/nginx/html
 ```
@@ -737,24 +736,24 @@ Con todo esto ya podemos levantar los servicios:
  ⠿ Container app-php-fpm-1  Created                                                                                 0.0s
  ⠿ Container app-web-1      Created                                                                                 0.0s
 Attaching to app-php-fpm-1, app-web-1
-app-php-fpm-1  | [21-Sep-2022 10:22:20] NOTICE: fpm is running, pid 1
-app-php-fpm-1  | [21-Sep-2022 10:22:20] NOTICE: ready to handle connections
-app-web-1      | /docker-entrypoint.sh: /docker-entrypoint.d/ is not empty, will attempt to perform configuration
-app-web-1      | /docker-entrypoint.sh: Looking for shell scripts in /docker-entrypoint.d/
-app-web-1      | /docker-entrypoint.sh: Launching /docker-entrypoint.d/10-listen-on-ipv6-by-default.sh
-app-web-1      | 10-listen-on-ipv6-by-default.sh: info: Getting the checksum of /etc/nginx/conf.d/default.conf
-app-web-1      | 10-listen-on-ipv6-by-default.sh: info: /etc/nginx/conf.d/default.conf differs from the packaged version
-app-web-1      | /docker-entrypoint.sh: Launching /docker-entrypoint.d/20-envsubst-on-templates.sh
-app-web-1      | /docker-entrypoint.sh: Launching /docker-entrypoint.d/30-tune-worker-processes.sh
-app-web-1      | /docker-entrypoint.sh: Configuration complete; ready for start up
-app-web-1      | 2022/09/21 10:22:20 [notice] 1#1: using the "epoll" event method
-app-web-1      | 2022/09/21 10:22:20 [notice] 1#1: nginx/1.23.1
-app-web-1      | 2022/09/21 10:22:20 [notice] 1#1: built by gcc 10.2.1 20210110 (Debian 10.2.1-6)
-app-web-1      | 2022/09/21 10:22:20 [notice] 1#1: OS: Linux 5.10.0-18-arm64
-app-web-1      | 2022/09/21 10:22:20 [notice] 1#1: getrlimit(RLIMIT_NOFILE): 1048576:1048576
-app-web-1      | 2022/09/21 10:22:20 [notice] 1#1: start worker processes
-app-web-1      | 2022/09/21 10:22:20 [notice] 1#1: start worker process 29
-app-web-1      | 2022/09/21 10:22:20 [notice] 1#1: start worker process 30
+php-fpm  | [21-Sep-2022 10:22:20] NOTICE: fpm is running, pid 1
+php-fpm  | [21-Sep-2022 10:22:20] NOTICE: ready to handle connections
+nginx      | /docker-entrypoint.sh: /docker-entrypoint.d/ is not empty, will attempt to perform configuration
+nginx      | /docker-entrypoint.sh: Looking for shell scripts in /docker-entrypoint.d/
+nginx      | /docker-entrypoint.sh: Launching /docker-entrypoint.d/10-listen-on-ipv6-by-default.sh
+nginx      | 10-listen-on-ipv6-by-default.sh: info: Getting the checksum of /etc/nginx/conf.d/default.conf
+nginx      | 10-listen-on-ipv6-by-default.sh: info: /etc/nginx/conf.d/default.conf differs from the packaged version
+nginx      | /docker-entrypoint.sh: Launching /docker-entrypoint.d/20-envsubst-on-templates.sh
+nginx      | /docker-entrypoint.sh: Launching /docker-entrypoint.d/30-tune-worker-processes.sh
+nginx      | /docker-entrypoint.sh: Configuration complete; ready for start up
+nginx      | 2022/09/21 10:22:20 [notice] 1#1: using the "epoll" event method
+nginx      | 2022/09/21 10:22:20 [notice] 1#1: nginx/1.23.1
+nginx      | 2022/09/21 10:22:20 [notice] 1#1: built by gcc 10.2.1 20210110 (Debian 10.2.1-6)
+nginx      | 2022/09/21 10:22:20 [notice] 1#1: OS: Linux 5.10.0-18-arm64
+nginx      | 2022/09/21 10:22:20 [notice] 1#1: getrlimit(RLIMIT_NOFILE): 1048576:1048576
+nginx      | 2022/09/21 10:22:20 [notice] 1#1: start worker processes
+nginx      | 2022/09/21 10:22:20 [notice] 1#1: start worker process 29
+nginx      | 2022/09/21 10:22:20 [notice] 1#1: start worker process 30
 ```
 
 > ⚠️ &nbsp;Si el comando anterior da un error de tipo "bind: address already in use" es posible que tengas Nginx nativo funcionando. Puedes pararlo con: `sudo systemctl stop nginx`.
