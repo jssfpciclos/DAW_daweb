@@ -511,15 +511,15 @@ Para **instalar PHP-FPM** seguiremos los pasos indicados a continuación.
 En primer lugar debemos instalar algunos **prerrequisitos**:
 
 ```bash
-:~$ apt update
+apt update
 # Instalamos los paquetes necesarios para añadir repositorios externos:
-:~$ apt install -y lsb-release ca-certificates apt-transport-https software-properties-common gnupg2
+apt install -y lsb-release ca-certificates apt-transport-https software-properties-common gnupg2
 # Importamos la clave GPG del repositorio externo desde donde descargarnos la última versión de PHP-FPM:
-:~$ curl -fsSL  https://packages.sury.org/php/apt.gpg | gpg --dearmor -o /etc/apt/trusted.gpg.d/sury.gpg
+curl -fsSL  https://packages.sury.org/php/apt.gpg | gpg --dearmor -o /etc/apt/trusted.gpg.d/sury.gpg
 # Añadimos el repositorio externo en cuestión:
-:~$ echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" | tee /etc/apt/sources.list.d/sury-php.list
+echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" | tee /etc/apt/sources.list.d/sury-php.list
 # Confirmamos que el repositorio está disponible tras actualizar las fuentes:
-:~$ apt update
+apt update
 ```
 
 Es posible encontrarnos con varias versiones del paquete. Veamos primero cómo enfocar la búsqueda a los nombres de paquete que nos interesan:
@@ -605,7 +605,7 @@ Buscar el bloque `location ~ \.php` y dejarlo así:
 ```nginx
 location ~ \.php$ {
     root           /usr/share/nginx/html;
-    fastcgi_pass   unix:/var/run/php/php8.4-fpm.sock;
+    fastcgi_pass   unix:/var/run/php/php8.3-fpm.sock;
     fastcgi_index  index.php;
     index          index.php;
     include        fastcgi_params;
