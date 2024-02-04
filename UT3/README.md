@@ -378,6 +378,16 @@ En este tema, vamos a aprender cómo se instala de forma nativa (directamente so
 
 ### Instalación nativa
 
+> 📝 **Datos importantes a recordar**:
+> * nginx > ruta de instalación `/etc/nginx`<br>
+> * nginx > fichero de configuración `/etc/nginx/nginx.conf`<br>
+> * nginx > fichero configuración default `/etc/nginx/conf.d/default.conf`<br>
+> * php-fpm > ruta de instalación `/etc/php/8.3/fpm`<br>
+> * php-fpm > fichero configuración pool de procesos `/etc/php/8.3/fpm/pool.d/www.conf`<br>
+> 
+> *Reemplazar `8.3` por la versión de PHP instalada.*
+
+
 Vamos a utilizar la versión base de Debian 11 (Bullseye) para instalar Nginx. 
 
 ```bash
@@ -672,7 +682,8 @@ La estructura del "proyecto" quedaría así:
 ```bash
 :~/UT3/EC/php-dockerizado$ tree
 .
-├── default.conf
+└── config
+    └── default.conf
 ├── docker-compose.yml
 └── src
     └── index.php
@@ -682,16 +693,16 @@ La composición de servicios en Docker se lleva a cabo mediante la herramienta [
 
 ```yaml
 version: "3.8"
-name: UT3-Ejercicio-PHP-Dockerizado
+name: ut3-ejercicio-php-dockerizado
 services:
   web:
     image: nginx:1.25  # imagen oficial Nginx, versión 1.25
     container_name: nginx
     volumes:
       - ./src:/etc/nginx/html # "root" por defecto en Nginx
-      - ./default.conf:/etc/nginx/conf.d/default.conf
+      - ./config/default.conf:/etc/nginx/conf.d/default.conf
     ports:
-      - 80:80
+      - 8001:80
 
   php-fpm:
     image: php:8-fpm   # imagen oficial PHP que incorporar soporte para FPM
