@@ -1,4 +1,4 @@
-# UT2-TE3.1: Implantación página web PHP con Nginx + PHP-FPM, y depuración con XDebug
+# TE3.1: Implantación página web PHP con Nginx + PHP-FPM, y depuración con XDebug
 
 ### TAREA EVALUABLE
 
