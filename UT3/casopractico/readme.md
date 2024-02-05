@@ -1,5 +1,5 @@
 <!-- omit in toc -->
-# Cómo desarrollar PHP dentro de un contenedor Docker usando Visual Studio Code
+# Cómo depurar PHP paso a paso con Docker y usando VSCode y PHPStorm con XDebug
 
 <!-- omit in toc -->
 ### Indice
