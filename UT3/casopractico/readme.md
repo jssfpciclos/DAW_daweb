@@ -6,6 +6,7 @@
 
 - [Depurar con PHP](#depurar-con-php)
   - [Docker](#docker)
+    - [Estructura del proyecto](#estructura-del-proyecto)
   - [Imagen de PHP-FPM](#imagen-de-php-fpm)
   - [Imagen de Nginx](#imagen-de-nginx)
   - [Docker Compose](#docker-compose)
@@ -63,6 +64,29 @@ Es posible depurar PHP con XDebug tanto en un entorno local como en un contenedo
 En este caso vamos a necesitar al menos 2 contenedores, uno para el servidor web (Ngix) y otro para PHP-FPM (FastCGI Process Manager). En este ejemplo, vamos a obviar la BD, pero si la necesitas, deberás añadir un tercer contenedor con el motor de base de datos que necesites.
 
 Para este caso práctico, vamos a usar un contenedor con PHP 8.3 y Nginx (1.25).
+
+#### Estructura del proyecto
+
+```plaintext
+UT3\caso-practico\xdebug\
+├── app
+│   ├── src
+│   │   ├── index.php
+
+├── docker
+│   ├── php
+│   │   ├── config
+│   │   │   └── xdebug.ini
+│   │   │   └── error_reporting.ini
+│   │   └── dockerfile
+│   └── nginx
+│       ├── config
+│       │   └── default.conf
+
+├── docker-compose.yml
+```
+
+
 
 ### Imagen de PHP-FPM
 
@@ -283,6 +307,7 @@ Espero que este caso práctico te haya sido de utilidad.
 
 ## Referencias
 
-
+- [XDebug](https://xdebug.org/)
 - [Setup Step Debugging in PHP with Xdebug and Docker](https://matthewsetter.com/setup-step-debugging-php-xdebug3-docker/z)
+
 
