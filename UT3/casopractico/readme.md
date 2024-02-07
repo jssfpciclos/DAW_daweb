@@ -69,9 +69,8 @@ Para este caso práctico, vamos a usar un contenedor con PHP 8.3 y Nginx (1.25).
 
 ```plaintext
 UT3\caso-practico\xdebug\
-├── app
-│   ├── src
-│   │   ├── index.php
+├── src
+│   ├── index.php
 
 ├── docker
 │   ├── php
