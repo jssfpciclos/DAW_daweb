@@ -376,7 +376,11 @@ En el tema anterior, vimos como Docker nos hace la vida mucho más fácil a la h
 
 En este tema, vamos a aprender cómo se instala de forma nativa (directamente sobre Linux), pero lo haremos sobre una imagen base de Docker (ubuntu o debian), y también lo haremos utilizando una imagen de Docker que ya tenga instalado Nginx. (opción recomendada en producción)
 
-### Instalación nativa
+### Instalación nativa. Opción 1
+
+En la instalación nativa, o instación sobre un servidor, vamos a instalar todos los componentes sobre el mismo servidor, como se muestra en la siguiente imagen:
+
+<img src="https://github.com/jssfpciclos/DAW_eedd/assets/72703706/51fd0dd5-ad43-4891-84ab-fc578eac1300" style="display: block; margin: 0 auto;">
 
 > 📝 **Datos importantes a recordar**:
 > * nginx > ruta de instalación `/etc/nginx`<br>
@@ -445,9 +449,11 @@ Ahora podemos acceder a http://localhost desde el navegador del host, y veremos 
 ![Nginx Hello](res/files/nginx-hello.png)
 
 
-### Creación de un DockerFile para recrear la imagen
+### Instalación Nativa. Opción 2 (*Creación de un DockerFile para recrear la imagen*)
 
 Vamos a crear un DockerFile para poder recrear la imagen de Nginx que hemos creado anteriormente, y así no tener que volver a instalarlo cada vez que queramos crear un contenedor con Nginx.
+
+<img src="https://github.com/jssfpciclos/DAW_eedd/assets/72703706/129b675f-4129-4f80-98ca-513edf335528" style="display: block; margin: 0 auto;">
 
 > 📝 **DockerFile**:<br>
 > Simplemente es ejecutar todos los pasos que hemos realizado anteriormente, pero en un fichero de texto, para que Docker lo ejecute de forma automática, como si fuera una `receta`.
@@ -510,11 +516,15 @@ Cuando un cliente hace una petición al servidor web, este trata de gestionarla,
 
 A continuación veremos el despliegue de una aplicación PHP como ejemplo de servidor de aplicaciones.
 
-### PHP nativo
+### PHP nativo (Opción 1)
 
 [PHP](https://www.php.net/) es un lenguaje de "scripting" muy enfocado a la programación web (aunque no únicamente) y permite desarrollar aplicaciones integradas en el propio código HTML.
 
 El servidor de aplicación (o manejador de procesos) que se utiliza para PHP es [PHP-FPM](https://www.php.net/manual/es/install.fpm.php). Se encarga de manejar los procesos [FastCGI](https://es.wikipedia.org/wiki/FastCGI), un protocolo para interconectar programas interactivos con un servidor web.
+
+En esta opción, ambos software (Nginx y php) se instalan en el mismo servidor:
+
+<img src="https://github.com/jssfpciclos/DAW_eedd/assets/72703706/40998fc9-2900-48bf-81c4-34ad5bb0eccd" style="display: block; margin: 0 auto;">
 
 Para **instalar PHP-FPM** seguiremos los pasos indicados a continuación.
 
@@ -668,7 +678,7 @@ Abrimos un navegador en la ruta especificada `localhost/index.php` y veremos la 
 
 
 
-### PHP dockerizado
+### PHP dockerizado (Opción 2)
 
 Como vamos a poder comprobar, todo lo complejo y tedioso que ha sido instalar PHP-FPM en el sistema de forma manual, se simplifica enormemente con una imagen de Docker que ya tenga instalado PHP-FPM.
 
@@ -676,6 +686,8 @@ Para este escenario es necesario "componer" dos servicios, ya que mientras antes
 
 - Nginx (`web`)
 - PHP-FPM (`php-fpm`)
+
+<img src="https://github.com/jssfpciclos/DAW_eedd/assets/72703706/7b8f9e2a-dc82-4d30-bfba-8702edc61f95" style="display: block; margin: 0 auto;">
 
 La estructura del "proyecto" quedaría así:
 
