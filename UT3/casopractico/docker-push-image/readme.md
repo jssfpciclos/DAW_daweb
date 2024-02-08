@@ -73,9 +73,19 @@ Pero ahora en el dockerfile, en lugar de mapear los ficheros de configuración d
 ```Dockerfile
 FROM php:8.0-fpm
 
+# Install xdebug
+# --> PECL is a repository for PHP Extensions and as PECL is not installed by default, we need to install it first
+# --> xdebug is a PHP extension which provides debugging and profiling capabilities
+# --> Activate el módulo xdebug, a través de la función docker-php-ext-enable
+RUN pecl install xdebug-3.3.0 \
+    && docker-php-ext-enable xdebug
+
 # Copiar ficheros de configuración de XDebug
 COPY ./docker/php/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 COPY ./docker/php/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
+
+EXPOSE 9000
+
 ```
 
 Y ahora vamos a construir la imagen con el siguiente comando:
