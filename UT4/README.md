@@ -7,12 +7,18 @@ Ya hemos visto la instalación de Nginx. En esta unidad de trabajo nos vamos a d
 ## Recursos del tema
 
 - [Resolución de nombres DNS en linux](https://yuminlee2.medium.com/linux-networking-dns-7ff534113f7d)
+- Nginx tester
+  - [Test de configuración de Nginx "DigitalOcean"](https://www.digitalocean.com/community/tools/nginx)
+  - [Test de Directiva "Location"](https://nginx.viraptor.info/)
+- Nginx utilidades
+  - [Principales errores y soluciones](https://www.nginx.com/resources/wiki/start/topics/tutorials/config_pitfalls/)
 
 <!-- omit in toc -->
 ## Índice
 
 - [1. Configuración del servidor web](#1-configuración-del-servidor-web)
   - [Principales ubicaciones](#principales-ubicaciones)
+  - [¿ Qué encontramos en el directorio principal `/etc/nginx` ?](#-qué-encontramos-en-el-directorio-principal-etcnginx-)
   - [Configuración principal](#configuración-principal)
   - [¿ Qué son las directivas ?](#-qué-son-las-directivas-)
 - [2. Entendiendo la configuración por defecto](#2-entendiendo-la-configuración-por-defecto)
@@ -64,13 +70,38 @@ Y desde donde se sirven los ficheros:
 - `/usr/share/nginx/html`: Carpeta raíz del servidor web.
 
 
+### ¿ Qué encontramos en el directorio principal `/etc/nginx` ?
+
+1. **`nginx.conf`**: Es el archivo de configuración principal de Nginx. Este archivo contiene la configuración global de Nginx, incluyendo los módulos que se van a cargar, los logs, el número de procesos que se van a ejecutar, etc.
+2. **`conf.d`**: Es un directorio que contiene los archivos de configuración de los sitios web que se van a servir. Cada archivo de configuración contiene la configuración de un sitio web.
+3. **`modules`**: Es un directorio que contiene módulos dinámicos que pueden ser cargados en la configuración de Nginx. Estos módulos pueden ser cargados usando la directiva `load_module`
+4. **`fastcgi_params, scgi_params`**:  Archivos de configuración para pasar parámetros adicionales al proceso FastCGI o SCGI.
+
+
+> 🫥 La utilización de los directorios **`sites-available`** y **`sites-enabled`** para activar o desactivar sitios está decrepita y no se utiliza. Esta forma de trabajar se importó de Apache.<br>
+> En nginx simplemente debemos renombrar el fichero con extensión `.conf` a cualquier otra `.conf.noactive` (por ejemplo) para que no se incluya dentro del `include /etc/nginx/conf.d/*.conf`
+
+> 🔥 En nginx el término `host-virtual` o `server configuration` se refiere a la configuración de un sitio web, se usan indistintamente ya que se refiere al mismo concepto.
+
+
 ### Configuración principal
 
 En Nginx, la configuración del servicio está en el archivo `/etc/nginx/nginx.conf` con el siguiente contenido:
 
 > 💡 Otras ubicaciones de configuración:
 >  `/usr/local/etc/nginx` o `/usr/local/nginx/conf`, son otras ubicaciones de configuración.
-> El comando `ps -ax -o command | grep nginx` nos muestra la ruta de configuración que está utilizando el proceso.
+> El comando `ps -ax -o command | grep nginx` nos muestra la ruta de configuración que está utilizando el proceso.<br>
+> Otra opción es utilizar el comando `nginx -V` que muestra de forma detallada toda la configuración que aplica
+> ```bash
+> ~$ sudo nginx -V
+> nginx version: nginx/1.22.0
+> built by gcc 10.2.1 20210110 (Debian 10.2.1-6)
+> built with OpenSSL 1.1.1k  25 Mar 2021 (running with OpenSSL 1.1.1n  15 Mar 2022)
+> TLS SNI support enabled
+> configure arguments: --prefix=/etc/nginx --conf-path=/etc/nginx/nginx.conf --error-log-path=/var/log/nginx/error.log --http-log-path=/var/log/niginx/access.log --pid-path=/var/run/nginx.pid...
+```
+
+Configuración por defecto de Nginx (según el SO y la versión puede variar):
 
 ```nginx
 user  nginx;
@@ -115,6 +146,9 @@ Las directivas son de 2 tipos:
 - **Directivas complejas**: Son directivas que tienen bloques asociados. Se escriben en varias líneas.
 
 Como se muestra en el ejemplo anterior, una configuración está compuesta de bloques o contextos. El más externo es llamado el contexto principal, y contiene a los demás contextos.
+
+> 🔥 **Directivas**<br>
+> El listado de todas las directivas que se pueden utilizar en Nginx se encuentra en la [documentación oficial](https://nginx.org/en/docs/dirindex.html)
 
 <!-- omit in toc -->
 #### Contextos tipos
@@ -176,7 +210,7 @@ La carpeta `etc\nginx\conf.d` contiene 2 ficheros de configuración:
 - `example_ssl.conf`: Este fichero contiene la configuración para servir sitios web seguros. Esta configuración se aplica a todos los sitios web que se van a servir de forma segura.<br>
   Este fichero está totalmente comentado, y no será usado hasta tener un requerimiento SSL.
 
-La configuración por defecto de Nginx es la siguiente:
+La configuración por defecto dentro del fichero `\etc\nginx\conf.d\default.conf` de Nginx es la siguiente:
 
 ```nginx
 server { 
@@ -186,6 +220,7 @@ server {
     #charset koi8-r; 
     #access_log  /var/log/nginx/log/host.access.log  main; 
 
+  
     location / { 
         root   /etc/nginx/html; 
         index  index.html index.htm; 
@@ -352,6 +387,7 @@ Contenido del fichero:
 
 ```nginx
 server {
+  listen 80;
 	server_name helloworld.com www.helloword.com;
 	
   location / {
@@ -426,12 +462,6 @@ Podemos usar la herramienta `curl` para simular una petición a un dominio concr
   ```bash
   :~$ curl -H "Host: www.helloworld.com" http://localhost
   ```
-
-- Otra opción es utilizar --resolve para indicar la IP a la que resuelve el dominio que estamos simulando:
-  
-  ```bash
-  :~$ curl http://www.helloworld.com --resolve www.helloworld.com:80:127.0.0.1
-  ```
 <!-- omit in toc -->
 #### Usando Firefox
 
@@ -469,30 +499,31 @@ Los _virtual hosts_ permiten definir ubicaciones (**locations**) en su interior 
 
 A su vez, cada _location_ puede incluir las directivas correspondientes.
 
-Supongamos que nuestro "Hello World" lo queremos montar sobre la URL http://universe/helloworld. Procedemos de la siguiente manera:
+Supongamos que nuestro "Hello World" lo queremos montar sobre la URL http://universe.local/helloworld. Procedemos de la siguiente manera:
 
-```console
-:~$ sudo vi /etc/nginx/conf.d/universe.conf
+```bash
+:~$ sudo vi /etc/nginx/conf.d/universe.local.conf
 ```
 
-> 💡 &nbsp;Es recomendable crear un fichero `*.conf` por cada nombre de dominio que vamos a utilizar.
+> 💡Es recomendable crear un fichero `*.conf` por cada nombre de dominio que vamos a utilizar, y que este fichero se llame igual al nombre
 
 ```nginx
 server {
     server_name universe;
 
     location /helloworld {
-        root /home/sdelquin/www;  # /home/sdelquin/www/helloworld
+        root /etc/nginx/html/universe;
     }
 }
 ```
 
-> 💡 &nbsp;Tener en cuenta que lo que pongamos en `location` se añade a `root` para determinar la ruta raíz del servicio.
+> 💡 **Importante**<br>
+> Tener en cuenta que lo que pongamos en `location` se añade a `root` para determinar la ruta raíz del servicio.
 
 Recordar siempre recargar el servicio Nginx cuando hagamos cambios en la configuración:
 
 ```console
-sdelquin@lemon:~$ sudo systemctl reload nginx
+:~$ sudo systemctl reload nginx
 ```
 
 Ahora si accedemos a http://localhost/helloworld podremos visualizar la página correctamente:
@@ -513,7 +544,7 @@ Supongamos un ejemplo como el siguiente:
 ```nginx
 server {
   server_name app.es;
-  root /home/sdelquin/app;
+  root /etc/nginx/app;
 
   location /img {
     ...
@@ -527,8 +558,8 @@ server {
 
 Indicar que tanto `/img` como `/src` "heredan" el `root` especificado a nivel de servidor, quedando de la siguiente forma:
 
-- `img` → `/home/sdelquin/app/img`
-- `src` → `/home/sdelquin/app/src`
+- `img` → `/etc/nginx/app/img`
+- `src` → `/etc/nginx/app/src`
 
 ### Puerto de escucha
 
@@ -555,7 +586,7 @@ Los "alias" son directivas que funcionan junto a los _locations_ y permiten evit
 Siguiendo con nuestro "Hello World" vamos a configurar un _location_ (mediante alias) para acceder al recurso en la url http://universe/hello:
 
 ```console
-sdelquin@lemon:~$ sudo vi /etc/nginx/conf.d/universe.conf
+:~$ sudo vi /etc/nginx/conf.d/universe.conf
 ```
 
 ```nginx
@@ -585,7 +616,7 @@ Vamos a ejemplificar este escenario listando el contenido de la carpeta `/etc/ng
 Editamos el _virtual host_ con el que venimos trabajando:
 
 ```console
-sdelquin@lemon:~$ sudo vi /etc/nginx/conf.d/universe.conf
+:~$ sudo vi /etc/nginx/conf.d/universe.conf
 ```
 
 ```nginx
@@ -604,7 +635,7 @@ server {
 Después de recargar, podemos acceder a la URL y ver que se muestra el listado de ficheros que hay en la ruta especificada:
 
 ```console
-sdelquin@lemon:~$ firefox universe/files
+:~$ firefox universe/files
 ```
 
 ![Nginx Autoindex](./res/images/nginx-autoindex.png)
@@ -623,14 +654,14 @@ Lo primero es crear un fichero de credenciales `.htpasswd` con formato `<usuario
 El usuario lo podemos escribir "tal cual" en el fichero de autenticación:
 
 ```console
-sdelquin@lemon:~$ echo -n 'sdelquin:' \
+:~$ echo -n 'sdelquin:' \
 | sudo tee -a /etc/nginx/.htpasswd > /dev/null
 ```
 
 Para la contraseña, primero debemos generar un _hash_ antes de guardarla. Para ello usamos la herramienta **openssl** con el [subcomando passwd](https://www.openssl.org/docs/man1.1.1/man1/openssl-passwd.html):
 
 ```console
-sdelquin@lemon:~$ openssl passwd -apr1 systemd \
+:~$ openssl passwd -apr1 systemd \
 | sudo tee -a /etc/nginx/.htpasswd > /dev/null
 ```
 
@@ -639,7 +670,7 @@ sdelquin@lemon:~$ openssl passwd -apr1 systemd \
 Vamos a comprobar que el fichero se ha creado correctamente y que la contraseña no está en claro 😅:
 
 ```console
-sdelquin@lemon:~$ sudo cat /etc/nginx/.htpasswd
+:~$ sudo cat /etc/nginx/.htpasswd
 sdelquin:$apr1$A.UE2T7J$qgt0pRnZ99ePuDukgi/oh/
 ```
 
@@ -648,7 +679,7 @@ sdelquin:$apr1$A.UE2T7J$qgt0pRnZ99ePuDukgi/oh/
 Ahora debemos hacer una pequeña modificación a nuestro _virtual host_ para añadir la autenticación:
 
 ```console
-sdelquin@lemon:~$ sudo vi /etc/nginx/conf.d/universe.conf
+:~$ sudo vi /etc/nginx/conf.d/universe.conf
 ```
 
 ```nginx
@@ -680,14 +711,14 @@ Tras introducir nuestras credenciales ya podemos ver el listado de ficheros:
 
 La ubicación por defecto de los _logfiles_ en Nginx es:
 
-- `/var/log/nginx/access.log`
-- `/var/log/nginx/error.log`
+- `/var/log/nginx/access.log`: Registra todas las peticiones que se han realizado al servidor.
+- `/var/log/nginx/error.log`: Registra todos los errores que se han producido en el servidor.
 
 <!-- omit in toc -->
 #### `access.log`
 
 ```console
-sdelquin@lemon:~$ sudo tail -5 /var/log/nginx/access.log
+:~$ sudo tail -5 /var/log/nginx/access.log
 127.0.0.1 - - [08/Oct/2022:10:33:54 +0100] "GET /files/ HTTP/1.1" 200 966 "-" "Mozilla/5.0 (X11; Linux aarch64; rv:91.0) Gecko/20100101 Firefox/91.0" "-"
 127.0.0.1 - - [08/Oct/2022:10:33:54 +0100] "GET /favicon.ico HTTP/1.1" 404 153 "http://universe/files/" "Mozilla/5.0 (X11; Linux aarch64; rv:91.0) Gecko/20100101 Firefox/91.0" "-"
 127.0.0.1 - - [08/Oct/2022:10:34:53 +0100] "GET /files HTTP/1.1" 301 169 "-" "Mozilla/5.0 (X11; Linux aarch64; rv:91.0) Gecko/20100101 Firefox/91.0" "-"
@@ -699,7 +730,7 @@ sdelquin@lemon:~$ sudo tail -5 /var/log/nginx/access.log
 #### `error.log`
 
 ```console
-sdelquin@lemon:~$ sudo tail -5 /var/log/nginx/error.log
+:~$ sudo tail -5 /var/log/nginx/error.log
 2022/10/08 10:34:47 [notice] 362884#362884: signal 17 (SIGCHLD) received from 362885
 2022/10/08 10:34:47 [notice] 362884#362884: worker process 362885 exited with code 0
 2022/10/08 10:34:47 [notice] 362884#362884: worker process 362886 exited with code 0
@@ -802,7 +833,7 @@ location ~ ^/query/(.*)$ {
 
 > 💡 Si usamos el operador `=` en vez de `~` estaremos forzando a que la URL sea exactamente la que indicamos.
 
-Una herramienta interesante para probar nuestros patrones es [Nginx location match tester](<[https://](https://nginx.viraptor.info/)>).
+Una herramienta interesante para probar nuestros patrones es [Nginx location match tester](https://nginx.viraptor.info/).
 
 ### Orden de búsqueda
 
@@ -825,7 +856,7 @@ location /images/ {
 Cuando Nginx se compila se hace incluyendo una serie de **módulos estáticos** que le otorgan ciertas funcionalidades extra:
 
 ```console
-sdelquin@lemon:~$ sudo nginx -V 2>&1 | tr ' ' '\n' | grep module
+:~$ sudo nginx -V 2>&1 | tr ' ' '\n' | grep module
 --modules-path=/usr/lib/nginx/modules
 --with-http_addition_module
 --with-http_auth_request_module
@@ -869,20 +900,20 @@ Vamos a **instalar un módulo de terceros para Nginx y cargarlo dinámicamente**
 Los módulos pueden requerir ciertos **paquetes de soporte** de cara a su compilación. En el caso de este módulo necesitamos las librerías de desarrollo de [pcre](https://www.pcre.org/):
 
 ```console
-sdelquin@lemon:~$  sudo apt install libpcre3-dev
+:~$  sudo apt install libpcre3-dev
 ```
 
 Posteriormente tenemos que **descargar el código fuente de Nginx con la misma versión que tenemos instalada en el sistema**. Para ello:
 
 ```console
-sdelquin@lemon:~$ curl -sL https://nginx.org/download/nginx-$(/sbin/nginx -v \
+:~$ curl -sL https://nginx.org/download/nginx-$(/sbin/nginx -v \
 |& cut -d '/' -f2).tar.gz | tar xvz -C /tmp
 ```
 
 Ahora pasamos a **descargar el código fuente del módulo** en cuestión. En este caso el de Fancy Index:
 
 ```console
-sdelquin@lemon:~$ git clone https://github.com/aperezdc/ngx-fancyindex.git /tmp/ngx-fancyindex
+:~$ git clone https://github.com/aperezdc/ngx-fancyindex.git /tmp/ngx-fancyindex
 Clonando en '/tmp/ngx-fancyindex'...
 remote: Enumerating objects: 944, done.
 remote: Counting objects: 100% (156/156), done.
@@ -897,30 +928,30 @@ Resolviendo deltas: 100% (534/534), listo.
 Nos movemos a la carpeta donde hemos descargado el código fuente de Nginx y realizamos la **configuración de la compilación**:
 
 ```console
-sdelquin@lemon:~$ cd /tmp/nginx-1.22.0
+:~$ cd /tmp/nginx-1.22.0
 
-sdelquin@lemon:/tmp/nginx-1.22.0$ ./configure --add-dynamic-module=../ngx-fancyindex --with-compat
+:/tmp/nginx-1.22.0$ ./configure --add-dynamic-module=../ngx-fancyindex --with-compat
 ...
 ```
 
 A continuación **generamos la librería dinámica**:
 
 ```console
-sdelquin@lemon:/tmp/nginx-1.22.0$ make modules
+:/tmp/nginx-1.22.0$ make modules
 ...
 ```
 
 Este proceso habrá creado un fichero `.so` dentro de la carpeta `objs`. Lo copiaremos a la carpeta desde la que se cargan los módulos dinámicos de Nginx:
 
 ```console
-sdelquin@lemon:/tmp/nginx-1.22.0$ sudo mkdir -p /etc/nginx/modules
-sdelquin@lemon:/tmp/nginx-1.22.0$ sudo cp objs/ngx_http_fancyindex_module.so /etc/nginx/modules
+:/tmp/nginx-1.22.0$ sudo mkdir -p /etc/nginx/modules
+:/tmp/nginx-1.22.0$ sudo cp objs/ngx_http_fancyindex_module.so /etc/nginx/modules
 ```
 
 Para que este módulo se cargue correctamente, hay que especificarlo en el fichero de configuración de Nginx:
 
 ```console
-sdelquin@lemon:~$ sudo vi /etc/nginx/nginx.conf
+:~$ sudo vi /etc/nginx/nginx.conf
 ```
 
 ```nginx
@@ -959,7 +990,7 @@ server {
 Por supuesto hemos de recargar la configuración de Nginx para que estos cambios surtan efecto:
 
 ```console
-sdelquin@lemon:~$ sudo systemctl reload nginx
+:~$ sudo systemctl reload nginx
 ```
 
 Ahora, si accedemos a http://universe/files veremos algo similar a lo siguiente:
@@ -1002,20 +1033,20 @@ La página de Certbot nos permite elegir incluso el servidor web que estamos uti
 Lo primero que haremos (tras actualizar paquetería) será instalar el **cliente de certbot**:
 
 ```console
-sdelquin@lemon:~$ sudo apt install -y certbot
+:~$ sudo apt install -y certbot
 ```
 
 Podemos comprobar que el programa está correctamente instalado:
 
 ```console
-sdelquin@lemon:~$ certbot --version
+:~$ certbot --version
 certbot 1.12.0
 ```
 
 A continuación debemos instalar el **plugin de Nginx para certbot**:
 
 ```console
-sdelquin@lemon:~$ sudo apt install -y python3-certbot-nginx
+:~$ sudo apt install -y python3-certbot-nginx
 ```
 <!-- omit in toc -->
 #### Configuración
@@ -1025,7 +1056,7 @@ Ahora ya podemos lanzar el cliente que nos permitirá obtener los certificados T
 Vamos a configurar un host virtual para el dominio **`http://arkania.es`**:
 
 ```console
-sdelquin@lemon:~$ sudo certbot --nginx
+:~$ sudo certbot --nginx
 Saving debug log to /var/log/letsencrypt/letsencrypt.log
 Plugins selected: Authenticator nginx, Installer nginx
 Enter email address (used for urgent renewal and security notices)
@@ -1097,7 +1128,7 @@ IMPORTANT NOTES:
    Donating to ISRG / Let's Encrypt:   https://letsencrypt.org/donate
    Donating to EFF:                    https://eff.org/donate-le
 
-sdelquin@lemon:~$
+:~$
 ```
 
 > 💡 Las preguntas sobre email de contacto, términos de servicio y campaña EFF sólo saldrán la primera vez que ejecutamos el comando.
@@ -1107,7 +1138,7 @@ El cliente `certbot` ha llevado a cabo el [desafío http-01](https://letsencrypt
 Ahora vamos a echar un vistazo a los **cambios que ha sufrido el archivo de configuración del host virtual**:
 
 ```console
-sdelquin@lemon:~$ cat /etc/nginx/conf.d/arkania.conf
+:~$ cat /etc/nginx/conf.d/arkania.conf
 ```
 
 > Contenido:
@@ -1143,7 +1174,7 @@ server {
 Los certificados de _Let's Encrypt_ tienen una validez de **90 días**, pero afortunadamente, `certbot` instala una tarea en el cron del sistema de manera que renueva los certificados antes de que expiren:
 
 ```console
-sdelquin@lemon:~$ cat /etc/cron.d/certbot
+:~$ cat /etc/cron.d/certbot
 # /etc/cron.d/certbot: crontab entries for the certbot package
 #
 # Upstream recommends attempting renewal twice a day
@@ -1172,7 +1203,7 @@ El certificado **sólo se renovará cuando queden menos de 30 días** para su ve
 Antes de probar el acceso desde nuestro dominio, debemos reiniciar el servidor web para que las nuevas configuraciones surtan efecto:
 
 ```console
-sdelquin@lemon:~$ sudo systemctl restart nginx
+:~$ sudo systemctl restart nginx
 ```
 
 🔒 Ahora ya podemos acceder a http://arkania.es (incluso sin _https_) y la conexión será segura.
@@ -1188,7 +1219,7 @@ Es muy habitual que la gente use el prefijo `www` al acceder a un sitio web. Es 
 Lo primero será configurar la redirección de `www` en un _virtual host_ aparte:
 
 ```console
-sdelquin@lemon:~$ sudo vi /etc/nginx/conf.d/www-arkania.conf
+:~$ sudo vi /etc/nginx/conf.d/www-arkania.conf
 ```
 
 > Contenido:
@@ -1204,7 +1235,7 @@ server {
 A continuación tenemos que lanzar `certbot` para el dominio `www.arkania.es`:
 
 ```console
-sdelquin@lemon:~$ sudo certbot --nginx -d www.arkania.es
+:~$ sudo certbot --nginx -d www.arkania.es
 ```
 
 > 💡 Es necesario tener certificado de seguridad para el subdominio `www` porque si no, las peticiones a `https://www.arkania.es` darían un error al no disponer de certificado de seguridad.
