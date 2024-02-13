@@ -6,7 +6,10 @@ Ya hemos visto la instalación de Nginx. En esta unidad de trabajo nos vamos a d
 <!-- omit in toc -->
 ## Recursos del tema
 
-- [Resolución de nombres DNS en linux](https://yuminlee2.medium.com/linux-networking-dns-7ff534113f7d)
+- Guías
+  - [Guía rápida servidor-web Nginx](./Nginx.md)
+- DNS
+  - [Resolución de nombres DNS en linux](https://yuminlee2.medium.com/linux-networking-dns-7ff534113f7d)
 - Nginx tester
   - [Test de configuración de Nginx "DigitalOcean"](https://www.digitalocean.com/community/tools/nginx)
   - [Test de Directiva "Location"](https://nginx.viraptor.info/)
