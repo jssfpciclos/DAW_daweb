@@ -6,7 +6,7 @@ Para la realización de estos ejercicios, crea un nuevo directorio en tu reposit
 > - Para la realización de este ejercicio, usa la última versión de Nginx disponible en Docker Hub.
 > - Estos ejercicios se realizarán dentro del contenedor de Docker
 
-Este ejercicio trata de 2 partes:
+Este ejercicio trata de 3 partes:
 
 1. Desplegar una página web en un servidor Nginx con Docker-compose
 2. Crear una imagen de docker, que contenga la configuración.
@@ -41,15 +41,6 @@ Configura el archivo `mypetshop.conf` para crear con la siguiente configuración
 - Nombre del servidor `mypetshop.local` y `www.mypetshop.local`
 - Ruta del documento raíz `/var/www/html/mypetshop.local`
 - Si no se indica ningún fichero, por defecto usará `index.html`, `index.htm`, en ese orden.
-
-```nginx
-server {
-    listen 80;
-    server_name mypetshop.local;
-    root /usr/share/nginx/html;
-    index index.html;
-}
-```
 
 Genera el archivo `docker-compose.yml` con la siguiente configuración:
 
