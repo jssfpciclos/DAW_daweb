@@ -39,11 +39,8 @@ Ya hemos visto la instalación de Nginx. En esta unidad de trabajo nos vamos a d
   - [Puerto de escucha](#puerto-de-escucha)
   - [Alias](#alias)
   - [Listado de directorios](#listado-de-directorios)
-  - [Try\_files](#try_files)
   - [Control de acceso](#control-de-acceso)
   - [Ficheros de log](#ficheros-de-log)
-    - [Formato de los logs](#formato-de-los-logs)
-    - [Ubicación de los logs y nombres de ficheros](#ubicación-de-los-logs-y-nombres-de-ficheros)
   - [Ficheros de índice](#ficheros-de-índice)
   - [Valores de retorno](#valores-de-retorno)
   - [Redirecciones](#redirecciones)
@@ -54,8 +51,7 @@ Ya hemos visto la instalación de Nginx. En esta unidad de trabajo nos vamos a d
   - [Certificados SSL](#certificados-ssl)
   - [Let's Encrypt](#lets-encrypt)
   - [Certbot](#certbot)
-  - [Probando el acceso seguro](#probando-el-acceso-seguro)
-  - [Redirección www](#redirección-www)
+  - [Certificados autofirmados](#certificados-autofirmados)
 
 
 ## 1. Configuración del servidor web
@@ -678,36 +674,6 @@ Después de recargar, podemos acceder a la URL y ver que se muestra el listado d
 
 > 💡 El ejemplo anterior hubiera sido muy difícil de hacer con `root` ya que `/files` se añadiría a `/etc/nginx`.
 
-### Try_files
-
-La directiva `try_files` nos permite especificar una serie de rutas que Nginx intentará buscar en el servidor para encontrar el recurso que se está solicitando. Permite indicar separados por espacios una serie de rutas que se van a intentar buscar en el servidor, en el orden en el que se han especificado.<br>
-_Solo se puede utilizar dentro de un bloque `location`._
-
-Vamos a ejemplificar este escenario con el _virtual host_ que venimos utilizando. Supongamos que queremos que si no se encuentra el recurso solicitado, se redirija a una página de error 404.
-
-> 💡 $uri es la variable que indica la url que se están actualmente solicitando
-
-Entonces en el siguiente ejemplo:
-
-
-```nginx
-server {
-    ...
-    server_name universe;
-
-    # ...
-
-    location / {
-        root /etc/nginx/html/universe;
-        index index.html;
-        try_files $uri $uri/ =404;
-    }
-}
-```
-Primero intentará buscar el recurso solicitado, si no lo encuentra, intentará buscar un directorio con el mismo nombre, y si no lo encuentra, redirigirá a la página de error 404.
-
-Si encuentra un directorio con el mismo nombre que el recurso solicitado, intentará encontrar una configuración para ese directorio, y si la encuentra, la aplicará, en caso contrario, en caso de que no exista una directiva index para ese directorio, y no se permita el listado de directorios, se redirigirá a la página de error 404.
-
 ### Control de acceso
 
 Los servidores web permiten la restricción del acceso a los recursos del mismos a través de 2 vías:
@@ -831,6 +797,7 @@ A nivel de log podemos configurar los siguientes aspectos:
 - **nivel de log**: Podemos definir el nivel de log que queremos registrar.
 - y otras opciones menos importantes, como la rotación, etc.
 
+<!-- omit in toc -->
 #### Formato de los logs
 
 El formato de los logs se define mediante la directiva `log_format`:
@@ -862,6 +829,7 @@ server {
     ...
 }
 ```
+<!-- omit in toc -->
 #### Ubicación de los logs y nombres de ficheros
 
 La ubicación por defecto de los _logfiles_ en Nginx es:
@@ -1031,6 +999,32 @@ location /images/ {
     try_files $uri $uri/ /images/default.gif;
 }
 ```
+
+Vamos a ejemplificar este escenario con el _virtual host_ que venimos utilizando. Supongamos que queremos que si no se encuentra el recurso solicitado, se redirija a una página de error 404.
+
+> 💡 $uri es la variable que indica la url que se están actualmente solicitando
+
+Entonces en el siguiente ejemplo:
+
+
+```nginx
+server {
+    ...
+    server_name universe;
+
+    # ...
+
+    location / {
+        root /etc/nginx/html/universe;
+        index index.html;
+        try_files $uri $uri/ =404;
+    }
+}
+```
+Primero intentará buscar el recurso solicitado, si no lo encuentra, intentará buscar un directorio con el mismo nombre, y si no lo encuentra, redirigirá a la página de error 404.
+
+Si encuentra un directorio con el mismo nombre que el recurso solicitado, intentará encontrar una configuración para ese directorio, y si la encuentra, la aplicará, en caso contrario, en caso de que no exista una directiva index para ese directorio, y no se permita el listado de directorios, se redirigirá a la página de error 404.
+
 
 ## 5. Módulos
 
@@ -1281,7 +1275,8 @@ El **intento de renovación** del certificado se lleva a cabo **2 veces al día*
 
 El certificado **sólo se renovará cuando queden menos de 30 días** para su vencimiento. En otras palabras, como los certificados tienen una validez de 90 días, a efectos prácticos, **se renuevan cada 60 días**.
 
-### Probando el acceso seguro
+<!-- omit in toc -->
+#### Probando el acceso seguro
 
 Antes de probar el acceso desde nuestro dominio, debemos reiniciar el servidor web para que las nuevas configuraciones surtan efecto:
 
@@ -1293,7 +1288,8 @@ Antes de probar el acceso desde nuestro dominio, debemos reiniciar el servidor w
 
 ![Certificado Let's Encrypt](./res/images/lets-encrypt-cert.png)
 
-### Redirección www
+<!-- omit in toc -->
+#### Redirección www
 
 ![Meme www subdominio](./res/images/www-domain.png)
 
@@ -1323,3 +1319,64 @@ A continuación tenemos que lanzar `certbot` para el dominio `www.myuniverse.loc
 ```
 
 > 💡 Es necesario tener certificado de seguridad para el subdominio `www` porque si no, las peticiones a `https://www.myuniverse.local` darían un error al no disponer de certificado de seguridad.
+
+
+
+### Certificados autofirmados
+
+> 🔥 **Advertencia**<br>
+> Jamás se deben usar certificados autofirmados en un servidor real en producción. Son útiles para pruebas y desarrollo, pero no para un entorno de producción.
+
+Crear un certificado autofirmado puede hacerse, con la herramienta `openssl`:
+
+```bash
+:$ sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/nginx-selfsigned.key -out /etc/ssl/certs/nginx-selfsigned.crt
+```
+Explica cada uno de los parámetros:
+
+- `req`: Es el comando para la gestión de certificados.
+- `-x509`: Indica que se va a crear un certificado autofirmado.
+- `-nodes`: No cifra la clave privada.
+- `-days 365`: Validez del certificado.
+- `-newkey rsa:2048`: Crea una nueva clave privada y la almacena en el fichero `/etc/ssl/private/nginx-selfsigned.key`.
+- `-keyout`: Indica el fichero donde se almacenará la clave privada.
+- `-out`: Indica el fichero donde se almacenará el certificado.
+- `Common Name`: Es el nombre del dominio para el que se va a crear el certificado.
+
+Después de ejecutar el comando, se nos pedirá que introduzcamos la información del certificado. El único campo obligatorio es el `Common Name`, que debe ser el nombre del dominio para el que se va a crear el certificado.
+
+> 🔑 **Mejorar seguridad**<br>
+> Con OpenSSL deberiamos crear un Diffie-Hellman group para mejorar la seguridad del certificado `sudo openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048`
+
+Ahora que el certificado ha sido creado, vamos a configurar el _virtual host_ para que utilice el certificado autofirmado, modificando el fichero `universe.conf`:
+
+```nginx
+server {
+    listen 443 ssl;
+    server_name universe.local www.universe.local;
+
+    ssl_certificate /etc/ssl/certs/nginx-selfsigned.crt;
+    ssl_certificate_key /etc/ssl/private/nginx-selfsigned.key;
+
+    # ...
+}
+```
+
+También es importante configurar el _virtual host_ para que redirija las peticiones a `https`, por eso añadimos un _server_ adicional para el puerto 80:
+
+```nginx
+server {
+    listen 80;
+    server_name universe.local www.universe.local;
+    return 301 https://$host$request_uri;
+}
+```
+
+Y con esto ya tendríamos configurado un sitio web con un certificado autofirmado.
+
+
+<!-- omit in toc -->
+### Referencias
+
+- [Entiendiendo proceso seleción de bloques y localizaciones en Nginx](https://www.digitalocean.com/community/tutorials/understanding-nginx-server-and-location-block-selection-algorithms)
+- [Cómo crear un certificado autofirmado con OpenSSL](https://www.digitalocean.com/community/tutorials/how-to-create-a-self-signed-ssl-certificate-for-nginx-in-ubuntu-18-04)
