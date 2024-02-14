@@ -8,6 +8,7 @@ Ya hemos visto la instalación de Nginx. En esta unidad de trabajo nos vamos a d
 
 - Guías
   - [Guía rápida servidor-web Nginx](./Nginx.md)
+  - [Guía y documentación muy buena en español](https://sio2sio2.github.io/doc-linux/07.serre/02.web/02.nginx/index.html)
 - DNS
   - [Resolución de nombres DNS en linux](https://yuminlee2.medium.com/linux-networking-dns-7ff534113f7d)
 - Nginx tester
@@ -15,6 +16,7 @@ Ya hemos visto la instalación de Nginx. En esta unidad de trabajo nos vamos a d
   - [Test de Directiva "Location"](https://nginx.viraptor.info/)
 - Nginx utilidades
   - [Principales errores y soluciones](https://www.nginx.com/resources/wiki/start/topics/tutorials/config_pitfalls/)
+  - [¿Cómo seleccionada Nginx qué configuración aplica a una petición?](https://www.digitalocean.com/community/tutorials/understanding-nginx-server-and-location-block-selection-algorithms-es)
 
 <!-- omit in toc -->
 ## Índice
@@ -37,15 +39,17 @@ Ya hemos visto la instalación de Nginx. En esta unidad de trabajo nos vamos a d
   - [Puerto de escucha](#puerto-de-escucha)
   - [Alias](#alias)
   - [Listado de directorios](#listado-de-directorios)
-  - [Acceso protegido](#acceso-protegido)
+  - [Try\_files](#try_files)
+  - [Control de acceso](#control-de-acceso)
   - [Ficheros de log](#ficheros-de-log)
+    - [Formato de los logs](#formato-de-los-logs)
+    - [Ubicación de los logs y nombres de ficheros](#ubicación-de-los-logs-y-nombres-de-ficheros)
   - [Ficheros de índice](#ficheros-de-índice)
   - [Valores de retorno](#valores-de-retorno)
   - [Redirecciones](#redirecciones)
   - [Expresiones regulares](#expresiones-regulares)
   - [Orden de búsqueda](#orden-de-búsqueda)
 - [5. Módulos](#5-módulos)
-  - [Instalación de un módulo](#instalación-de-un-módulo)
 - [6. Sitios seguros](#6-sitios-seguros)
   - [Certificados SSL](#certificados-ssl)
   - [Let's Encrypt](#lets-encrypt)
@@ -318,22 +322,43 @@ La propia instalación de Nginx ya configura un _virtual host_ **por defecto** (
 
 ```nginx
 server {
-    # Escucha en el puerto 80
-    listen       80;
+    # Escucha en el puerto 80. No se especifica ninguna interfaz, por lo que escucha en todas las interfaces. Si se indica "default_server" es el servidor por defecto.
+1   listen       80;
+2   listen      [::]:80;  # IPv6 
     # Nombre del servidor (dominio)
-    server_name  localhost;
+3   server_name  localhost;
+ 
     # Ruta donde los logs se van a almacenar y qué configuración se va a utilizar
-    #access_log  /var/log/nginx/host.access.log  main;
+4   #access_log  /var/log/nginx/host.access.log  main;
 
     # En este bloque se define la ruta raíz del servidor web.
     location / {
-        # Ruta donde se encuentra el contenido del servidor web
-        root   /etc/nginx/html;
-        # Ficheros index que se van a buscar en la ruta raíz, cuando no se indica ninguno
-        index  index.html index.htm;
+      # Ficheros index que se van a buscar en la ruta raíz, cuando no se indica ninguno
+5     root   /etc/nginx/html;  
+
+      # Ruta donde se encuentra el contenido del servidor web
+6     index  index.html index.htm;
     }
+
+    error_page   500 502 503 504  /50x.html;  # Redirección de errores
+7   location = /50x.html {
+8     root   /usr/share/nginx/html;  # Ruta donde se encuentra la página de error
+    }
+
+    ... # Resto de configuración
 }
 ```
+Explicación de las líneas:
+
+1. `listen 80`: Indica que el servidor web va a escuchar en el puerto 80. Si se indica `default_server` es el servidor por defecto (solo puede tener un servidor activada esta configuración)
+2. `listen [::]:80`: Indica que el servidor web va a escuchar en el puerto 80 para conexiones IPv6.
+3. `server_name localhost`: Indica el nombre del dominio a través del cual se va a acceder al servidor web. Como es la configuración por defecto, solo se accede a través de localhost.
+4. `access_log /var/log/nginx/host.access.log main;`: Indica que los logs de acceso se van a almacenar en el fichero `/var/log/nginx/host.access.log` utilizando el formato `main`.
+5. `root /etc/nginx/html;`: Indica que la ruta raíz del servidor web es `/etc/nginx/html`.
+6. `index index.html index.htm;`: Indica la lista de recursos que se deben buscar cuando el cliente solicita el íindice de un directorio del sitio (es decir no ha solicitado un recurso concreto).
+7. `error_page 500 502 503 504 /50x.html;`: Indica que cuando se produzca un error 500, 502, 503 o 504, se va a redirigir al cliente a la página `/50x.html`.
+8. `location = /50x.html { root /usr/share/nginx/html; }`: Indica que la página `/50x.html` se encuentra en la ruta `/usr/share/nginx/html`. 
+
 
 Por lo tanto, podemos concluir que colocando un fichero índice en la ruta raíz (de hecho siempre existe uno por defecto), deberíamos poder acceder a nuestro servidor web en el puerto 80 de la máquina.
 
@@ -384,17 +409,17 @@ Es por esto que cuando accedemos a http://localhost obtenemos esta página:
 
 ### Creación de un host virtual
 
-Si por ejemplo queremos crear un _virtual host_ para un sitio web llamado `helloworld`, lo primero que tenemos que hacer es crear un fichero de configuración:
+Si por ejemplo queremos crear un _virtual host_ para un sitio web llamado `universe.local`, lo primero que tenemos que hacer es crear un fichero de configuración:
 
 Contenido del fichero:
 
 ```nginx
 server {
   listen 80;
-	server_name helloworld.com www.helloword.com;
+	server_name universe.local www.universe.local;
 	
   location / {
-    root /etc/nginx/html/helloworld;
+    root /etc/nginx/html/universe;
     
   }
 }
@@ -408,7 +433,7 @@ nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
 nginx: configuration file /etc/nginx/nginx.conf test is successful
 ```
 
-A continuación tenemos que crear un fichero de índice en la carpeta `helloworld` ubicada en `/etc/nginx/html`:
+A continuación tenemos que crear un fichero de índice en la carpeta `universe` ubicada en `/etc/nginx/html`:
 
 > Contenido:
 
@@ -432,13 +457,13 @@ A continuación tenemos que crear un fichero de índice en la carpeta `helloworl
 Ahora recargamos la configuración en Nginx para que el nuevo _virtual host_ sea detectado:
 
 ```bash
-:~$ sudo service nginx reload
+:~$ service nginx reload
 ```
 
 Lo único que faltaría es simular un nombre de dominio a través de la configuración local de nuestro ordenador:
 
 ```bash
-:~$ sudo nano /etc/hosts
+:~$ nano /etc/hosts
 ```
 
 Añadimos la línea:
@@ -505,39 +530,43 @@ A su vez, cada _location_ puede incluir las directivas correspondientes.
 Supongamos que nuestro "Hello World" lo queremos montar sobre la URL http://universe.local/helloworld. Procedemos de la siguiente manera:
 
 ```bash
-:~$ sudo vi /etc/nginx/conf.d/universe.local.conf
+:~$ nano /etc/nginx/conf.d/universe.local.conf
 ```
 
 > 💡Es recomendable crear un fichero `*.conf` por cada nombre de dominio que vamos a utilizar, y que este fichero se llame igual al nombre
 
 ```nginx
 server {
-    server_name universe;
-
-    location /helloworld {
-        root /etc/nginx/html/universe;
+    server_name universe.local www.universe.local;
+        
+    location / {
+        root /etc/nginx/html/universe  # Ruta donde se almacena el contenido para este dominio (virtual host)
+        index index.html;
+        try_files $uri $uri/ =404;  # Si no encuentra el recurso, redirige a la página de error 404
     }
 }
 ```
 
-> 💡 **Importante**<br>
-> Tener en cuenta que lo que pongamos en `location` se añade a `root` para determinar la ruta raíz del servicio.
+Ahora hacemos una copia del fichero `index.html` como `helloworld.html`, y cambiamos el contenido para que muestre "Hello World desde fichero helloworld!".
 
 Recordar siempre recargar el servicio Nginx cuando hagamos cambios en la configuración:
 
-```console
-:~$ sudo systemctl reload nginx
+```bash
+:~$ service nginx reload
 ```
 
-Ahora si accedemos a http://localhost/helloworld podremos visualizar la página correctamente:
+Ahora si accedemos a http://universe.local/helloworld.html podremos visualizar la página correctamente:
 
 ```bash
-:~$ firefox universe/helloworld
+:~$ curl universe.local/helloworld.html
 ```
 
 ![Nginx Location](./res/images/nginx-location.png)
 
-> 💡 &nbsp;Recordar que hay que incluir la entrada correspondiente en `/etc/hosts` para que el nombre de dominio se resuelva localmente.
+Pero si accedemos a http://universe.local/helloworld (sin extensión) obtendremos un error 404, ya que la página no existe.
+
+
+> 💡 &nbsp;Recordar que hay que incluir la entrada correspondiente en `/etc/hosts` para que el nombre de dominio se resuelva localmente, o utilizar los otros métodos indicados
 
 <!-- omit in toc -->
 #### Heredando el root
@@ -559,7 +588,7 @@ server {
 }
 ```
 
-Indicar que tanto `/img` como `/src` "heredan" el `root` especificado a nivel de servidor, quedando de la siguiente forma:
+Indicar que tanto `/img` como `/src` "heredan" la directiva `root` especificado a nivel de servidor, quedando de la siguiente forma:
 
 - `img` → `/etc/nginx/app/img`
 - `src` → `/etc/nginx/app/src`
@@ -584,22 +613,25 @@ listen 443 ssl;
 
 ### Alias
 
-Los "alias" son directivas que funcionan junto a los _locations_ y permiten evitar que se añada la ruta de la url al _root_.
+Los "alias" son directivas que funcionan junto a los _location_ y permiten asociar a una URL secundaria un directorio diferente en el sistema de archvias, y así evitar que se añada la ruta de la url al _root_.
 
-Siguiendo con nuestro "Hello World" vamos a configurar un _location_ (mediante alias) para acceder al recurso en la url http://universe/hello:
+Siguiendo con nuestro vamos a configurar un _location_ (mediante alias) para acceder al recurso en la url http://universe.local/doc. Según configuración por defecto, el _root_ es `/etc/nginx/html` y el recurso que queremos mostrar está en `/var/data/doc`, por lo que la ruta completa sería `/etc/nginx/html/var/data/doc`, pero la ruta real es otra, ya que los documentos están en `/var/data/doc`.
 
-```console
+Esto se consigue con la directiva `alias`:
+
+```bash
 :~$ sudo vi /etc/nginx/conf.d/universe.conf
 ```
 
 ```nginx
 server {
-    server_name universe;
+    ...
+    server_name universe.local www.universe.local;
 
     # ...
 
-    location /hello {
-        alias /home/sdelquin/www/helloworld;
+    location /doc {
+        alias /var/data/doc;
     }
 }
 ```
@@ -614,16 +646,17 @@ Recargamos la configuración y accedemos en el navegador:
 
 La directiva `autoindex` nos permite listar el contenido del directorio indicado, pudiendo implementar una especie de FTP (lectura) a través del navegador.
 
-Vamos a ejemplificar este escenario listando el contenido de la carpeta `/etc/nginx` cuando accedamos a http://universe/files.
+Vamos a ejemplificar este escenario listando el contenido de la carpeta `/etc/nginx` cuando accedamos a http://universe.local/files.
 
 Editamos el _virtual host_ con el que venimos trabajando:
 
-```console
+```bash
 :~$ sudo vi /etc/nginx/conf.d/universe.conf
 ```
 
 ```nginx
 server {
+    ...
     server_name universe;
 
     # ...
@@ -637,35 +670,112 @@ server {
 
 Después de recargar, podemos acceder a la URL y ver que se muestra el listado de ficheros que hay en la ruta especificada:
 
-```console
-:~$ firefox universe/files
+```bash
+:~$ curl universe.local/files
 ```
 
 ![Nginx Autoindex](./res/images/nginx-autoindex.png)
 
 > 💡 El ejemplo anterior hubiera sido muy difícil de hacer con `root` ya que `/files` se añadiría a `/etc/nginx`.
 
-### Acceso protegido
+### Try_files
+
+La directiva `try_files` nos permite especificar una serie de rutas que Nginx intentará buscar en el servidor para encontrar el recurso que se está solicitando. Permite indicar separados por espacios una serie de rutas que se van a intentar buscar en el servidor, en el orden en el que se han especificado.<br>
+_Solo se puede utilizar dentro de un bloque `location`._
+
+Vamos a ejemplificar este escenario con el _virtual host_ que venimos utilizando. Supongamos que queremos que si no se encuentra el recurso solicitado, se redirija a una página de error 404.
+
+> 💡 $uri es la variable que indica la url que se están actualmente solicitando
+
+Entonces en el siguiente ejemplo:
+
+
+```nginx
+server {
+    ...
+    server_name universe;
+
+    # ...
+
+    location / {
+        root /etc/nginx/html/universe;
+        index index.html;
+        try_files $uri $uri/ =404;
+    }
+}
+```
+Primero intentará buscar el recurso solicitado, si no lo encuentra, intentará buscar un directorio con el mismo nombre, y si no lo encuentra, redirigirá a la página de error 404.
+
+Si encuentra un directorio con el mismo nombre que el recurso solicitado, intentará encontrar una configuración para ese directorio, y si la encuentra, la aplicará, en caso contrario, en caso de que no exista una directiva index para ese directorio, y no se permita el listado de directorios, se redirigirá a la página de error 404.
+
+### Control de acceso
+
+Los servidores web permiten la restricción del acceso a los recursos del mismos a través de 2 vías:
+
+<!-- omit in toc -->
+#### Según el origen de la petición
+
+Se analiza cúal es la dirección origen de la conexión/petición y se permite o no el acceso en función de la misma, a través de las directivas `allow`, `deny` e `internal`. `allow` y `deny` se pueden utilizar en cualquier contexto, mientras que `internal` solo se puede utilizar en el contexto `location`.
+
+**internal**:
+Indica que el recurso solo puede ser accedido por peticiones internas (procedentes del propio servidor). Si se intenta acceder a este recurso desde fuera del servidor, se devolverá un error 404.
+
+```nginx
+error_page  403  /403.html
+
+location = /403.html {
+   internal;  # Solo se puede acceder a esta página si la petición es interna
+}
+```
+Si se recibe una petición `http://universe.local/403.html` desde fuera del servidor, se devolverá un error 404 (página no encontrada), ya que la petición no es interna.
+
+
+**allow y deny**:
+Sirven respectivamente para permitir o denegar el acceso, y se evalúan en el orden en que aparecen.
+
+```nginx
+location /docs/ {
+   deny  192.168.255.10;
+   allow 192.168.255.0/24;
+   deny all;
+   autoindex on;
+}
+```
+
+En este ejemplo, se deniega el acceso a la carpeta `/docs/` a una IP concreta, se permite el acceso a un rango de IPs, y se deniega el acceso al resto.
+
+> 🔥 **Advertencia**<br>
+> Cuando exista un proxy intermedio, la dirección IP que se recibe en el servidor web no es la del cliente, sino la del proxy. En estos casos, se puede utilizar la directiva `set_real_ip_from` para indicar la dirección IP del proxy, y la directiva `real_ip_header` para indicar la cabecera que contiene la dirección IP del cliente.
+
+<!-- omit in toc -->
+#### Autenticación
+
+La autenticación del cliente se puede realizar de diferentes modos.
+
+- **Básica**: El cliente debe introducir un nombre de usuario y una contraseña.
+- **JWT**: El cliente debe enviar un token JWT.
+- **Subpetición**: El cliente debe enviar una petición a un servidor de autenticación, que le devolverá un token que el cliente debe enviar en la petición al servidor web.
+
+La que vamos a ver en este tema es la autenticación básica, que se realiza a través de las directivas `auth_basic` y `auth_basic_user_file`.
+
 
 En ciertos escenarios es posible que queramos añadir una validación de credenciales para acceder a un recurso web. En este caso podemos hacer uso de las **directivas de autenticación**.
 
 Lo primero es crear un fichero de credenciales `.htpasswd` con formato `<usuario>:<contraseña>`. En este caso vamos a usar:
 
-- Usuario: `sdelquin`
-- Contraseña: `systemd`
+- Usuario: `sdfuser`
+- Contraseña: `sdfsdf`
 
 El usuario lo podemos escribir "tal cual" en el fichero de autenticación:
 
 ```console
-:~$ echo -n 'sdelquin:' \
-| sudo tee -a /etc/nginx/.htpasswd > /dev/null
+:~$ echo -n 'sdfuser:' | sudo tee -a /etc/nginx/.htpasswd > /dev/null
 ```
 
 Para la contraseña, primero debemos generar un _hash_ antes de guardarla. Para ello usamos la herramienta **openssl** con el [subcomando passwd](https://www.openssl.org/docs/man1.1.1/man1/openssl-passwd.html):
 
 ```console
-:~$ openssl passwd -apr1 systemd \
-| sudo tee -a /etc/nginx/.htpasswd > /dev/null
+:~$ openssl passwd -apr1 sdfsdf | sudo tee -a /etc/nginx/.htpasswd > /dev/null
 ```
 
 > 💡 [Diferencia entre codificación, cifrado y hashing](https://hackwise.mx/cual-es-la-diferencia-entre-codificacion-cifrado-y-hashing/).
@@ -674,7 +784,7 @@ Vamos a comprobar que el fichero se ha creado correctamente y que la contraseña
 
 ```console
 :~$ sudo cat /etc/nginx/.htpasswd
-sdelquin:$apr1$A.UE2T7J$qgt0pRnZ99ePuDukgi/oh/
+:~$ $apr1$wLZbhi72$FAEZtkuvoAUshUWGdtdUY/
 ```
 
 > 💡 Si nos fijamos en el _hash_ de la contraseña aparece una "cabecera" indicando el tipo de algoritmo utilizado `$apr1$` en este caso, lo que permite luego comprobar la contraseña introducida.
@@ -687,7 +797,7 @@ Ahora debemos hacer una pequeña modificación a nuestro _virtual host_ para añ
 
 ```nginx
 server {
-    server_name universe;
+    server_name universe.local www.universe.local;
 
     # ...
 
@@ -712,13 +822,55 @@ Tras introducir nuestras credenciales ya podemos ver el listado de ficheros:
 
 ### Ficheros de log
 
+Dentro de la monitorización de un servidor web, los **ficheros de log** son una herramienta fundamental para el análisis de su funcionamiento.
+
+A nivel de log podemos configurar los siguientes aspectos:
+
+- **Formato de los logs**: Podemos definir un formato específico para los logs.
+- **Ubicación de los logs**: Podemos definir la ubicación de los logs.
+- **nivel de log**: Podemos definir el nivel de log que queremos registrar.
+- y otras opciones menos importantes, como la rotación, etc.
+
+#### Formato de los logs
+
+El formato de los logs se define mediante la directiva `log_format`:
+
+```nginx
+log_format main '$remote_addr - $remote_user [$time_local] "$request" '
+                '$status $body_bytes_sent "$http_referer" '
+                '"$http_user_agent" "$http_x_forwarded_for"';
+```
+
+Esta directiva se define a nivel de `http` y se hereda en todos los niveles inferiores. Si queremos cambiar el formato o crear un formato nuevo, lo podemos hacer en cualquier nivel.
+
+Pro ejemplo, para indicar el nivel de comprersión de la petición, podríamos añadir la directiva `gzip_ratio`:
+
+```nginx
+log_format compression '$remote_addr - $remote_user [$time_local] '
+                      '"$request" $status $body_bytes_sent '
+                      '"$http_referer" "$http_user_agent" "$gzip_ratio"';
+```
+
+A este nuevo lo hemos llamado `compression` y hemos añadido la variable `$gzip_ratio` que indica el nivel de compresión de la petición.
+
+Si ahora queremos que un _virtual host_ utilice este formato, lo indicamos en la directiva `access_log`:
+
+```nginx
+server {
+    ...
+    access_log /var/log/nginx/compression.log compression;
+    ...
+}
+```
+#### Ubicación de los logs y nombres de ficheros
+
 La ubicación por defecto de los _logfiles_ en Nginx es:
 
 - `/var/log/nginx/access.log`: Registra todas las peticiones que se han realizado al servidor.
 - `/var/log/nginx/error.log`: Registra todos los errores que se han producido en el servidor.
 
 <!-- omit in toc -->
-#### `access.log`
+**`access.log`**
 
 ```console
 :~$ sudo tail -5 /var/log/nginx/access.log
@@ -730,7 +882,7 @@ La ubicación por defecto de los _logfiles_ en Nginx es:
 ```
 
 <!-- omit in toc -->
-#### `error.log`
+**`error.log`**
 
 ```console
 :~$ sudo tail -5 /var/log/nginx/error.log
@@ -751,6 +903,28 @@ server {
     ...
 }
 ```
+<!-- omit in toc -->
+#### Niveles de log
+
+Los niveles de log que podemos definir son:
+
+- **debug**: Registra todos los eventos que se producen en el servidor.
+- **info**: Registra todos los eventos que se producen en el servidor, excepto los eventos de debug.
+- **notice**: Registra todos los eventos que se producen en el servidor, excepto los eventos de debug e info.
+- **warn**: Registra todos los eventos que se producen en el servidor, excepto los eventos de debug, info y notice.
+- **error**: Registra todos los eventos que se producen en el servidor, excepto los eventos de debug, info, notice y warn.
+- **crit**: Registra todos los eventos que se producen en el servidor, excepto los eventos de debug, info, notice, warn y error.
+- **alert**: Registra todos los eventos que se producen en el servidor, excepto los eventos de debug, info, notice, warn, error y crit.
+- **emerg**: Registra todos los eventos que se producen en el servidor, excepto los eventos de debug, info, notice, warn, error, crit y alert.
+- **none**: No registra ningún evento.
+
+Para cambiar el nivel de log, se utiliza la directiva `error_log`:
+
+```nginx
+error_log /var/log/nginx/error.log warn;
+```
+
+Esta directiva se puede utilizar a nivel de `http`, `server` y `location`, y se hereda en todos los niveles inferiores si no se especifica otra configuración.
 
 ### Ficheros de índice
 
@@ -793,13 +967,13 @@ server {
     listen 80;
     listen 443 ssl;
 
-    server_name www.old-name.com;
+    server_name www.old-universe.local;
 
-    return 301 $scheme://www.new-name.com$request_uri;
+    return 301 $scheme://www.universe.local$request_uri;
 }
 ```
 
-En este ejemplo estamos redirigiendo todo el tráfico del dominio `www.old-name.com` al dominio `www.new-name.com`. Es importante destacar el uso de [variables Nginx](https://nginx.org/en/docs/varindex.html) en las directivas. En este caso concreto se manejan dos de ellas:
+En este ejemplo estamos redirigiendo todo el tráfico del dominio `www.old-universe.com` al dominio `www.universe.local`. Es importante destacar el uso de [variables Nginx](https://nginx.org/en/docs/varindex.html) en las directivas. En este caso concreto se manejan dos de ellas:
 
 | Variable       | Significado                      |
 | -------------- | -------------------------------- |
@@ -810,7 +984,11 @@ En este ejemplo estamos redirigiendo todo el tráfico del dominio `www.old-name.
 
 ### Expresiones regulares
 
-Nginx nos permite usar **expresiones regulares** en ubicaciones (y otras directivas similares). Para ello usamos el operador `~` indicando el fragmento que debe coincidir.
+Nginx nos permite usar **expresiones regulares** en ubicaciones (y otras directivas similares). Para ello usamos el operador `~` indicando el fragmento que debe coincidir. El formato que se utiliza es el de [PCRE](https://www.pcre.org/). 
+
+> 💡 **Herramientas**<br>
+> - Para comprobar la validez de nuestras expresiones regulares podemos usar [Regex101](https://regex101.com/) o [RegExr](https://regexr.com/), y un página de ayuda como [Regular-expressions](https://www.regular-expressions.info/).
+> - Para testear las expresiones regulares en Nginx podemos usar [Nginx location match tester](https://nginx.viraptor.info/) o [Nginx regex tester](https://www.regextester.com/94055).
 
 En **un primer ejemplo**, supongamos que el usuario puede acceder a una carpeta de imágenes `img/` pero queremos denegar el acceso a las fotos de perfil:
 
@@ -896,109 +1074,8 @@ Nginx se puede extender haciendo uso de **módulos propios** o **módulos de la 
 | -------------------------- | --------------------------------------------- |
 | https://nginx.org/en/docs/ | https://www.nginx.com/resources/wiki/modules/ |
 
-### Instalación de un módulo
 
-Vamos a **instalar un módulo de terceros para Nginx y cargarlo dinámicamente**. En este caso hemos escogido [Fancy Index](https://www.nginx.com/resources/wiki/modules/fancy_index/) que permite visualizar de manera más "bonita" un listado de ficheros. Es un `autoindex` con brillos.
-
-Los módulos pueden requerir ciertos **paquetes de soporte** de cara a su compilación. En el caso de este módulo necesitamos las librerías de desarrollo de [pcre](https://www.pcre.org/):
-
-```console
-:~$  sudo apt install libpcre3-dev
-```
-
-Posteriormente tenemos que **descargar el código fuente de Nginx con la misma versión que tenemos instalada en el sistema**. Para ello:
-
-```console
-:~$ curl -sL https://nginx.org/download/nginx-$(/sbin/nginx -v \
-|& cut -d '/' -f2).tar.gz | tar xvz -C /tmp
-```
-
-Ahora pasamos a **descargar el código fuente del módulo** en cuestión. En este caso el de Fancy Index:
-
-```console
-:~$ git clone https://github.com/aperezdc/ngx-fancyindex.git /tmp/ngx-fancyindex
-Clonando en '/tmp/ngx-fancyindex'...
-remote: Enumerating objects: 944, done.
-remote: Counting objects: 100% (156/156), done.
-remote: Compressing objects: 100% (77/77), done.
-remote: Total 944 (delta 81), reused 128 (delta 73), pack-reused 788
-Recibiendo objetos: 100% (944/944), 274.95 KiB | 1.52 MiB/s, listo.
-Resolviendo deltas: 100% (534/534), listo.
-```
-
-> ⚠️ Hay algunos módulos que requieren la generación de su configuración ejecutando `./setup` desde la carpeta descargada de su código fuente.
-
-Nos movemos a la carpeta donde hemos descargado el código fuente de Nginx y realizamos la **configuración de la compilación**:
-
-```console
-:~$ cd /tmp/nginx-1.22.0
-
-:/tmp/nginx-1.22.0$ ./configure --add-dynamic-module=../ngx-fancyindex --with-compat
-...
-```
-
-A continuación **generamos la librería dinámica**:
-
-```console
-:/tmp/nginx-1.22.0$ make modules
-...
-```
-
-Este proceso habrá creado un fichero `.so` dentro de la carpeta `objs`. Lo copiaremos a la carpeta desde la que se cargan los módulos dinámicos de Nginx:
-
-```console
-:/tmp/nginx-1.22.0$ sudo mkdir -p /etc/nginx/modules
-:/tmp/nginx-1.22.0$ sudo cp objs/ngx_http_fancyindex_module.so /etc/nginx/modules
-```
-
-Para que este módulo se cargue correctamente, hay que especificarlo en el fichero de configuración de Nginx:
-
-```console
-:~$ sudo vi /etc/nginx/nginx.conf
-```
-
-```nginx
-user  nginx;
-worker_processes  auto;
-
-error_log  /var/log/nginx/error.log notice;
-pid        /var/run/nginx.pid;
-
-# Añadir aquí ↓
-load_module /etc/nginx/modules/ngx_http_fancyindex_module.so;
-# Añadir aquí ↑
-
-events {
-    worker_connections  1024;
-}
-
-# ...
-```
-
-Ahora ya podemos añadir las directivas del módulo a la configuración del _virtual host_. Modificamos el archivo `/etc/nginx/conf.d/universe.conf` de la siguiente manera:
-
-```nginx
-server {
-	server_name universe;
-    # ...
-
-    location /files {
-        alias /etc/nginx;
-        fancyindex on;              # Enable fancy indexes.
-        fancyindex_exact_size off;  # Output human-readable file sizes.
-    }
-}
-```
-
-Por supuesto hemos de recargar la configuración de Nginx para que estos cambios surtan efecto:
-
-```console
-:~$ sudo systemctl reload nginx
-```
-
-Ahora, si accedemos a http://universe/files veremos algo similar a lo siguiente:
-
-![Fancy index](./res/images/fancy-index.png)
+Este tema excede de la profundidad de este curso, pero es importante tener en cuenta que la extensibilidad de Nginx es una de sus grandes ventajas.
 
 ## 6. Sitios seguros
 
@@ -1054,16 +1131,18 @@ A continuación debemos instalar el **plugin de Nginx para certbot**:
 <!-- omit in toc -->
 #### Configuración
 
+(_Este proceso es a modo de ejemplo, en realidad no funcionaría ya que no existe el dominio `myuniverse.local`_)
+
 Ahora ya podemos lanzar el cliente que nos permitirá obtener los certificados TLS y configurar el sitio web que queramos para que utilice protocolo **https**.
 
-Vamos a configurar un host virtual para el dominio **`http://arkania.es`**:
+Vamos a configurar un host virtual para el dominio **`http://myuniverse.local`**:
 
 ```console
 :~$ sudo certbot --nginx
 Saving debug log to /var/log/letsencrypt/letsencrypt.log
 Plugins selected: Authenticator nginx, Installer nginx
 Enter email address (used for urgent renewal and security notices)
- (Enter 'c' to cancel): sdelqui@gobiernodecanarias.org
+ (Enter 'c' to cancel): jssdocente@gmail.com
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 Please read the Terms of Service at
@@ -1084,7 +1163,7 @@ Account registered.
 
 Which names would you like to activate HTTPS for?
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-1: arkania.es
+1: myuniverse.local
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 Select the appropriate numbers separated by commas and/or spaces, or leave input
 blank to select all options shown (Enter 'c' to cancel): 1
@@ -1093,7 +1172,7 @@ Performing the following challenges:
 http-01 challenge for arkania.es
 Waiting for verification...
 Cleaning up challenges
-Deploying Certificate to VirtualHost /etc/nginx/conf.d/arkania.conf
+Deploying Certificate to VirtualHost /etc/nginx/conf.d/myuniverse.conf
 
 Please choose whether or not to redirect HTTP traffic to HTTPS, removing HTTP access.
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1106,10 +1185,10 @@ Select the appropriate number [1-2] then [enter] (press 'c' to cancel): 2
 Redirecting all traffic on port 80 to ssl in /etc/nginx/conf.d/arkania.conf
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-Congratulations! You have successfully enabled https://arkania.es
+Congratulations! You have successfully enabled https://myuniverse.local
 
 You should test your configuration at:
-https://www.ssllabs.com/ssltest/analyze.html?d=arkania.es
+https://www.ssllabs.com/ssltest/analyze.html?d=myuniverse.local
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 IMPORTANT NOTES:
@@ -1141,32 +1220,33 @@ El cliente `certbot` ha llevado a cabo el [desafío http-01](https://letsencrypt
 Ahora vamos a echar un vistazo a los **cambios que ha sufrido el archivo de configuración del host virtual**:
 
 ```console
-:~$ cat /etc/nginx/conf.d/arkania.conf
+:~$ cat /etc/nginx/conf.d/myuniverse.conf
 ```
 
 > Contenido:
 
 ```nginx
 server {
-    server_name arkania.es;
-    root /home/sdelquin/arkania;
+    server_name myuniverse.local;
+    root /var/www/arkania;
 
 
     listen 443 ssl; # managed by Certbot
-    ssl_certificate /etc/letsencrypt/live/arkania.es/fullchain.pem; # managed by Certbot
-    ssl_certificate_key /etc/letsencrypt/live/arkania.es/privkey.pem; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/myuniverse.local/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/myuniverse.local/privkey.pem; # managed by Certbot
     include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
     ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
 
 }
 
 server {
-    if ($host = arkania.es) {
+    # Si el usuario accede a http://myuniverse.local, redirigimos a https://myuniverse.local
+    if ($host = myuniverse.local) {
         return 301 https://$host$request_uri;
     } # managed by Certbot
 
 
-    server_name arkania.es;
+    server_name myuniverse.local;
     listen 80;
     return 404; # managed by Certbot
 }
@@ -1205,8 +1285,8 @@ El certificado **sólo se renovará cuando queden menos de 30 días** para su ve
 
 Antes de probar el acceso desde nuestro dominio, debemos reiniciar el servidor web para que las nuevas configuraciones surtan efecto:
 
-```console
-:~$ sudo systemctl restart nginx
+```bash
+:~$ sudo service nginx restart
 ```
 
 🔒 Ahora ya podemos acceder a http://arkania.es (incluso sin _https_) y la conexión será segura.
@@ -1217,12 +1297,12 @@ Antes de probar el acceso desde nuestro dominio, debemos reiniciar el servidor w
 
 ![Meme www subdominio](./res/images/www-domain.png)
 
-Es muy habitual que la gente use el prefijo `www` al acceder a un sitio web. Es por ello que puede resultar útil configurar una redirección desde `www.arkania.es` a `arkania.es`.
+Es muy habitual que la gente use el prefijo `www` al acceder a un sitio web. Es por ello que puede resultar útil configurar una redirección desde `www.myuniverse.local` a `myuniverse.local`.
 
 Lo primero será configurar la redirección de `www` en un _virtual host_ aparte:
 
-```console
-:~$ sudo vi /etc/nginx/conf.d/www-arkania.conf
+```bash
+:~$ sudo vi /etc/nginx/conf.d/www-universe.conf
 ```
 
 > Contenido:
@@ -1230,15 +1310,16 @@ Lo primero será configurar la redirección de `www` en un _virtual host_ aparte
 ```nginx
 server {
     listen 80;
-    server_name www.arkania.es;
-    return 301 https://arkania.es$request_uri;
+
+    server_name www.myuniverse.local;
+    return 301 https://myuniverse.local$request_uri;
 }
 ```
 
-A continuación tenemos que lanzar `certbot` para el dominio `www.arkania.es`:
+A continuación tenemos que lanzar `certbot` para el dominio `www.myuniverse.local`:
 
 ```console
-:~$ sudo certbot --nginx -d www.arkania.es
+:~$ sudo certbot --nginx -d www.myuniverse.local
 ```
 
-> 💡 Es necesario tener certificado de seguridad para el subdominio `www` porque si no, las peticiones a `https://www.arkania.es` darían un error al no disponer de certificado de seguridad.
+> 💡 Es necesario tener certificado de seguridad para el subdominio `www` porque si no, las peticiones a `https://www.myuniverse.local` darían un error al no disponer de certificado de seguridad.
