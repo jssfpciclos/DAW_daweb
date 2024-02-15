@@ -1378,5 +1378,7 @@ Y con esto ya tendríamos configurado un sitio web con un certificado autofirmad
 <!-- omit in toc -->
 ### Referencias
 
-- [Entiendiendo proceso seleción de bloques y localizaciones en Nginx](https://www.digitalocean.com/community/tutorials/understanding-nginx-server-and-location-block-selection-algorithms)
-- [Cómo crear un certificado autofirmado con OpenSSL](https://www.digitalocean.com/community/tutorials/how-to-create-a-self-signed-ssl-certificate-for-nginx-in-ubuntu-18-04)
+- Nginx: [Documentación oficial de Nginx](https://nginx.org/en/docs/)
+- Nginx: [Listado de directivas de Nginx](https://nginx.org/en/docs/dirindex.html)
+- En profundidad: [Entiendiendo proceso seleción de bloques y localizaciones en Nginx](https://www.digitalocean.com/community/tutorials/understanding-nginx-server-and-location-block-selection-algorithms)
+- En profundidad: [Cómo crear un certificado autofirmado con OpenSSL](https://www.digitalocean.com/community/tutorials/how-to-create-a-self-signed-ssl-certificate-for-nginx-in-ubuntu-18-04)
