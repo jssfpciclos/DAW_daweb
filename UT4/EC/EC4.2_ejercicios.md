@@ -22,7 +22,7 @@ Los ficheros de la página están disponible en el siguiente enlace [Mypetshop](
 Para esto crea la siguiente estructura de directorios:
 
 ```plaintext
-UT4\EC4.2
+UT4\EC\4.2
 │   docker-compose.yml
 └───config
     │   nginx
