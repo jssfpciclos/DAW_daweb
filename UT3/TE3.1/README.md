@@ -18,7 +18,7 @@ Se entregará un PDF (en moodle) con el siguiente formato:
 ### ⚠️ Recursos
 
 - [Documentación de la UT3](../README.md)
-- [Caso práctico: Depurar PHP con XDebug](../casopractico/readme.md)
+- [Caso práctico: Depurar PHP con XDebug](../casopractico/php-xdebug/readme.md)
 
 ## Aplicación PHP
 
