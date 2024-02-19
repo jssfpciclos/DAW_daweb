@@ -1,6 +1,6 @@
 # Ejercicios 4.2
 
-Para la realización de estos ejercicios, crea un nuevo directorio en tu repositorio llamado `UT4\EC4.2`
+Para la realización de estos ejercicios, crea un nuevo directorio en tu repositorio llamado `UT4\EC\4.2`
 
 > 🔌 **Realiza los ejercicios con Docker**<br>
 > - Para la realización de este ejercicio, usa la última versión de Nginx disponible en Docker Hub.
@@ -10,7 +10,7 @@ Este ejercicio trata de 3 partes:
 
 1. Desplegar una página web en un servidor Nginx con Docker-compose
 2. Crear una imagen de docker, que contenga la configuración.
-3. Desplegar la el servidor Nginx con la imagen creada.
+3. Desplegar el servidor Nginx con la imagen creada.
 
 ### Ejercicio 4.2.1 Despliegue con Docker-compose
 

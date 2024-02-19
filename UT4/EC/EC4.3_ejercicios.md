@@ -1,6 +1,12 @@
-# Ejercicios 4.3
+# Ejercicios 4.3: Configuraciones avanzadas de Nginx
 
-Para la realización de estos ejercicios, crea un nuevo directorio en tu repositorio llamado `UT4\EC4.3`
+Recursos para el ejercicio:
+
+- [Archivos web Mypetshop](./res/mypetshop.website.zip)
+- [Listado de directivas de Nginx](https://nginx.org/en/docs/dirindex.html)
+- [Referencias del UT4](../../UT4/README.md#referencias)
+
+Para la realización de estos ejercicios, crea un nuevo directorio en tu repositorio llamado `UT4\EC\4.3`
 
 > 🔌 **Realiza los ejercicios con Docker**<br>
 > - Para la realización de este ejercicio, usa la última versión de Nginx disponible en Docker Hub.
@@ -10,7 +16,8 @@ Este ejercicio trata de 3 partes:
 
 1. Desplegar una página web en un servidor Nginx con Docker-compose
 2. Crear una imagen de docker, que contenga la configuración.
-3. Desplegar la el servidor Nginx con la imagen creada.
+3. Desplegar el servidor Nginx con la imagen creada.
+
 
 ### Ejercicio 4.3.1 Despliegue con Docker-compose
 
@@ -56,6 +63,17 @@ Genera el archivo `docker-compose.yml` con la siguiente configuración:
 - Nombre del escenario: `ec4.3`
 - Crear el servicio nombre `nginx` con las siguientes características:
   - contenedor nombre: `ec43_nginx`
+  - indica que es un [contenedor interactivo](https://betterstack.com/community/questions/question-interactive-shell-using-docker-compose/)
+    ```yaml	
+    nginx:
+      container_name: ec43_nginx
+      ...
+      # Estas opciones son para poder acceder al contenedor con un terminal interactivo en Docker-compose
+      stdin_open: true
+      tty: true
+      command: bash
+    ```
+    para poder acceder a él. (Es igual a la opción `-it` de `docker exec`)
   - Usar el puerto 8001 del host y el puerto 80 del contenedor.
   - Montar el fichero de configuración `mypetshop.conf` con la nueva configuración aplicada en el directorio adecuado del contenedor.
   - Montar el directorio `app` en el directorio y nombre del mismo adecuado dentro contenedor
@@ -65,7 +83,7 @@ Configurar a través del plugin de Chrome [Awesome Host Manager](https://chromew
 
 > 📄 _Realiza las siguientes pruebas_
 > 1. Acceder a través del navegador `mypetshop.local` y `www.mypetshop.local` y se visualiza la página web.
-> 2. Permite visualizar el contenido de la carpeta `images` en la url `mypetshop.local/images`.
+> 2. Permite visualizar el contenido (lista los archivos) de la carpeta `images` en la url `mypetshop.local/images`.
 > 3. Si se accede a una página que no existe (`mypetshop.local/missing`) , se visualiza página `404.html`.
 > 4. Si se produce un error 500 (accede a `mypetshop.local/500` para simular) se visualiza la página `50x.html`.
 
@@ -96,7 +114,7 @@ Para esto, modifica el archivo de configuración `mypetshop.conf` para que gener
 
 Para probar esta nueva configuración, reinicia el contenedor, y revisar que los logs se generan correctamente. Para esto, sigue los siguientes pasos:
 
-1. Abre 2 terminales (lado a loado) y accede al contenedor `ec43_nginx` (usando el comando `docker exec -it ec43_nginx /bin/bash`) en cada una de ellas.
+1. Abre 2 terminales (lado a lado) y accede al contenedor `ec43_nginx` (usando el comando `docker compose exec ec43_nginx bash`) en cada una de ellas.
 2. En una de las terminales, ejecuta el comando `tail -f /var/log/nginx/mypetshop_access.log` para ver los logs de acceso.
 3. En la otra terminal, ejecuta el comando `tail -f /var/log/nginx/mypetshop_error.log` para ver los logs de errores.
 
