@@ -15,6 +15,7 @@ Este ejercicio trata de 3 partes:
 1. Crear y configurar un sevidor Ubuntu en Digital Ocean a través de un Droplet.
 2. Configurar SSH, Firewall, Nginx y PHP en el servidor.
 3. Desplegar la aplicación PHP en el servidor.
+4. Desplegar una web estática bajo un dominio.
 
 ### Recursos
 
@@ -22,6 +23,7 @@ Para la realización de esta práctica vamos a utilizar los siguientes recursos:
 
 - [PHP & DigitalOcean](https://youtu.be/QWSwuhQ1O6Y)
 - [Configurar Dominio y SSL en Nginx](https://youtu.be/HBsCuZlDg60)
+- [NoIP](https://www.noip.com/)
 
 
 ### Crear Proyecto
@@ -294,3 +296,75 @@ Y ahora, si accedemos a la IP del servidor, seguido de `/info.php`, deberíamos 
 <img src="./img/01.phpinfo.png" width="80%" >
 
 
+### Ejercicio 6.1.3 Desplegar aplicación PHP
+
+Para este ejercicio vamos a desplegar una aplicación PHP muy sencilla, básica, simplemente para comprobar que todo está funcionando correctamente.
+
+#### Clonar Repositorio
+
+Vamos a clonar el repositorio `[php-site](https://github.com/ZeshanWD/php-site.git)` en el servidor, dentro de la carpeta `/usr/share/nginx/html/`.
+
+1. Nos situamos en el directorio `/usr/share/nginx/html/`.
+2. Clonamos el repositorio en la misma carpeta. `git clone https://github.com/ZeshanWD/php-site.git .` (El . del final indica que se clone en el directorio actual) 
+
+Y si accedemos a la IP del servidor, deberíamos ver la aplicación PHP.
+
+<img src="./img/02.phpsite.png" width="50%" >
+
+
+####  Ejericio 6.1.4 Desplegar web estática bajo un dominio
+
+Para este ejercicio vamos a desplegar una web estática bajo un dominio. Para este ejemplo vamos a utilizar la misma Web que ya utilizamos en el tema 4, la web de la tienda de mascotas [Mypetshop](../../../UT4/EC/res/mypetshop.website.zip).
+
+Como registrar un dominio es un proceso que implica un coste de adquisición y de renovación en el tiempo, vamos a utilizar un servicio de DNS dinámico, que nos permita asociar un dominio a la IP pública de nuestro servidor.
+
+Para este ejercicio vamos a utilizar el servicio de [NoIP](https://www.noip.com/), que nos permite asociar un dominio a la IP pública de nuestro servidor.
+
+#### Crear cuenta en NoIP
+
+1. Acceder a [NoIP](https://www.noip.com/).
+2. Crear una cuenta.
+3. Utilizar el servicio DNS dinámico gratuito.
+4. Acceder a la cuenta y crear un nuevo host.
+   - **Hostname**: `{iniciales-vuestro-nombre}-petshop.ddns.net`, en mi caso `jgr-petshop.ddns.net`.
+   - **Tipo de Host**: DNS Host (A)
+   - **Dirección IP**: IP pública del servidor.
+  
+Con esto ya tenemos un dominio asociado a la IP pública de nuestro servidor.
+
+#### Configurar Nginx para el dominio
+
+> 🔔 Cada uno que indique el nombre de su Dominio, con sus iniciales al principio. Para que sea más realista el ejemplo utilizaré el mio. Si está repetido porque otro compañero tiene las mismas iniciales que vosotros, coger otro dominio de los disponibles en NoIP como (webhop.me, ...)
+
+Vamos a configurar Nginx para que sirva la web estática bajo el dominio `jgr-petshop.ddns.net`.
+
+1. Crear un nuevo fichero de configuración en el directorio `/etc/nginx/conf.d/` con el nombre `{mypetshop.ddns.net.conf`.
+
+   ```bash
+   nano /etc/nginx/conf.d/jgr-petshop.conf
+   ```
+
+   > El nombre del fichero debe como buena práctica, debe coincidir con el nombre del dominio, pero en este caso como el dominio es dinmámico y no es el dominio real, solo vamos a utilizar en el nombre del dominio, el nombre real `jgr-petshop.conf`.
+
+   Y añadir la siguiente configuración.
+
+   ```nginx
+   server {
+      listen 80;
+
+      server_name jgrpetshop.ddns.net www.jgrpetshop.ddns.net;
+      root /var/www/html/jgr-petshop;
+      index index.html index.htm;
+   }
+   ```
+
+   Como se muestra en la configuración, debemos crear el directorio `/var/www/html/jgr-petshop` y copiar los ficheros de la web estática en este directorio.
+
+   > 📄 Para copiar los archivos al servidor, podeis utilizar:
+   > - `scp` desde el equipo local. `scp -r /path/to/local/folder root@<ip_droplet>:/var/www/html/jgr-petshop`
+   > - O desde la utilidad de FTP de un software como Mobaxterm o Termius.
+
+
+   
+
+   
