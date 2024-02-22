@@ -13,5 +13,5 @@ Materiales para la docencia del módulo **Despliegue de aplicaciones web** de se
 | [UT4](./UT4/README.md) | Administración de servidores web                                   |
 | [UT5](./UT5/README.md) | Administración de servidores de aplicaciones                       |
 | [UT5](./UT5/README.md) | Servicios de red implicados en el despliegue de una aplicación web |
-| [UT6](./UT6/README.md) | Administración y despliegue de Aplicaciones Web                    |
+| [UT6](./UT6/README.md) | Proyecto Final                    |
 
