@@ -1,4 +1,4 @@
-# Unidad Trabajo 6: Proyecto Final Curso Despliegue de Aplicaciones Web
+# UT6: Proyecto Final Curso
 
 Esta última unidad de trabajo es un proyecto final que engloba todos los conocimientos adquiridos durante el curso.
 
@@ -16,6 +16,9 @@ El proyecto consiste en desplegar diferentes escenarios en servidores reales pon
     - [MobaXTerm: Cliente SSH Gráfico (windows)](https://mobaxterm.mobatek.net/download.html)
     - [Termius: Cliente SSH Gráfico (Linux-mac)](https://termius.com/)
 
+<br>
+<br>
+<br>
 
 ## 📚 Proyecto Final
 
