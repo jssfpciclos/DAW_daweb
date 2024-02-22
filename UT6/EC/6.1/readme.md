@@ -1,4 +1,4 @@
-# UT6. Tarea Evaluable 6.1 - Desplegar aplicación PHP en Droplets de Digital Ocean
+# UT6. Ejericio 6.1 - Desplegar aplicación PHP en Droplets de Digital Ocean
 
 ### Objetivos
 
@@ -10,7 +10,7 @@
 
 ### Alcance
 
-Este ejercicio trata de 3 partes:
+Este ejercicio trata de 4 partes:
 
 1. Crear y configurar un sevidor Ubuntu en Digital Ocean a través de un Droplet.
 2. Configurar SSH, Firewall, Nginx y PHP en el servidor.
@@ -338,13 +338,13 @@ Con esto ya tenemos un dominio asociado a la IP pública de nuestro servidor.
 
 Vamos a configurar Nginx para que sirva la web estática bajo el dominio `jgr-petshop.ddns.net`.
 
-1. Crear un nuevo fichero de configuración en el directorio `/etc/nginx/conf.d/` con el nombre `{mypetshop.ddns.net.conf`.
+1. Crear un nuevo fichero de configuración en el directorio `/etc/nginx/conf.d/` con el nombre `mypetshop.com.conf`.
 
    ```bash
    nano /etc/nginx/conf.d/jgr-petshop.conf
    ```
 
-   > El nombre del fichero debe como buena práctica, debe coincidir con el nombre del dominio, pero en este caso como el dominio es dinmámico y no es el dominio real, solo vamos a utilizar en el nombre del dominio, el nombre real `jgr-petshop.conf`.
+   > El nombre del fichero como buena práctica, debe coincidir con el nombre del dominio, pero en este caso como el dominio es dinmámico (y no es nuestro) y no es el dominio real, solo vamos a utilizar el nombre del dominio (supuestamente real), el nombre `jgr-petshop.com.conf`.
 
    Y añadir la siguiente configuración.
 
@@ -355,6 +355,16 @@ Vamos a configurar Nginx para que sirva la web estática bajo el dominio `jgr-pe
       server_name jgrpetshop.ddns.net www.jgrpetshop.ddns.net;
       root /var/www/html/jgr-petshop;
       index index.html index.htm;
+
+      location / {
+         try_files $uri $uri/ =404;
+      }
+
+      error_page 500 502 503 504 /50x.html;
+      
+      error_page 404 /404.html;
+
+      
    }
    ```
 
@@ -365,6 +375,8 @@ Vamos a configurar Nginx para que sirva la web estática bajo el dominio `jgr-pe
    > - O desde la utilidad de FTP de un software como Mobaxterm o Termius.
 
 
-   
+   Y con esto ya tendríamos la web estática desplegada bajo el dominio `jgr-petshop.ddns.net`.
+
+   <img src="./img/03.staticssite-dns.png" width="80%" >
 
    
