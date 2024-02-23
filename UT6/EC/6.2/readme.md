@@ -19,7 +19,7 @@
 Este ejercicio trata de 4 partes:
 
 1. Desplegar una página web estática en un contenedor con Nginx como un App en DigitalOcean.
-2. Configurar SSH, Firewall, Nginx y PHP en el servidor.
+2. Desplegar un a
 3. Desplegar la aplicación PHP en el servidor.
 4. Desplegar una web estática bajo un dominio.
 
@@ -159,5 +159,14 @@ Una vez que la App está desplegada, se puede acceder a ella a través de la URL
 <img src="./img/04.CreateApp.png" width="50%" ><br>
 
 
-### 6.2.2 Desplegar un escenario Mutli-App en DigitalOcean
 
+
+
+
+
+#### Referencias
+
+- [Desplegar múltiples contenerizadas Apps a un DigitalOcean Droplet usando Docker Compose Contexts](https://danielwachtel.com/devops/deploying-multiple-dockerized-apps-digitalocean-docker-compose-contexts)
+- [Cómo desplegar PHP App a producción con DockerCompose](https://matthewsetter.com/deploy-php-app-docker-compose/)
+- [Desplegar imágenes de Docker en Digital Ocean](https://www.youtube.com/watch?v=oXEJMSVG2LA)
+- [Desplegando y securizando una aplicación React con Docker, Nginx y CI/CD](https://medium.com/@takubonjesi/containerising-deploying-and-securing-your-react-app-on-a-digitalocean-droplet-with-docker-b4670cac030)
