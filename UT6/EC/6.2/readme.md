@@ -16,12 +16,14 @@
 
 ### Alcance
 
-Este ejercicio trata de 4 partes:
+Este ejercicio trata de:
 
 1. Desplegar una página web estática en un contenedor con Nginx como un App en DigitalOcean.
-2. Desplegar un a
-3. Desplegar la aplicación PHP en el servidor.
-4. Desplegar una web estática bajo un dominio.
+
+
+### 📋 Tarea
+
+![alt text](../../TE6.2/img/01.concepto.png)
 
 
 ### Crear Proyecto
