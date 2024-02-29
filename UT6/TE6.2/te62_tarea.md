@@ -1,4 +1,4 @@
-# UT6. Tarea Evaluable 6.2 - Desplegar con Docker a Digital Ocean
+# UT6. Tarea Evaluable 6.2 - Crear imagen Docker para desplegar 2 aplicaciones estáticas
 
 ### Alcance
 
