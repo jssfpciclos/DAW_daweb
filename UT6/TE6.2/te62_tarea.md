@@ -33,18 +33,57 @@ La estructura del documento será la siguiente:
 
 ### 📋 Tarea
 
-La tarea consiste en desplegar una aplicación estática a través de un Docker en Digital Ocean.
+La tarea consiste en desplegar 2 aplicaciónes estáticas a través de una imagen de Docker, y subir a DockerHub.
 
-![alt text](img/01.concepto.png)
+<img src="img/01.concepto.png" width="80%">
+
+Tenemos que desplegar 2 aplicaciones estáticas, sobre un mismo contenedor de Nginx.
+
+#### Página de un Hospital
+
+<img src="img/02.hospital.01.png" width="50%">
+
+Codigo fuente: [porfolio.website.zip](res/medplus.rar)
+
+*Condiciones:*
+
+- Dominio: medplus.local / www.medplus.local
+- Escuchar por el puerto 80
+- Alojar la web en la carpeta `/var/www/html/medplus`
+- La página índice principal debe ser `index.html`
+- Crear una página 404.hml personalizada
+- La carpeta `images` se debe permitir listar su contenido. 
+- Crear una configuración personalizada para este dominio en Nginx.
+- Utiliza la imagen de nginx:1.25.3-alpine
+
+Imagen de Docker: `nombreusuario/medplus:1.0`  
 
 
-  
-  
+#### Página de un Porfolio
+
+<img src="img/03.portfolio.01.png" width="50%">
+
+Codigo fuente: [porfolio.website.zip](res/portfolio.rar)
+
+*Condiciones:*
+
+- Dominio: {nombre-apellido1}.porfolio.tech / www.{nombre-apellido1}.porfolio.tech
+- Escuchar por el puerto 8080 (nginx)
+- Alojar la web en la carpeta `/var/www/html/porfolio`
+- La página índice principal debe ser `index.html`
+- Crear una página 404.hml personalizada
+- Crear una configuración personalizada para este dominio en Nginx.
+- Utiliza la imagen de nginx:1.25.3-alpine
+
+Imagen de Docker: `nombreusuario/miporfolio:1.0`  
+
+> 💡 Los 2 páginas van dentro del mismo servidor/imagen, por lo que los siguientes pasos que se indican se realizarán para ambas sitios-web.
+
 
 #### 6.2.1 Explicación del proceso
 
-> 📄 En este apartado debes explicar la práctica, qué pasos hay que realizar para poder conseguir tener desplegada nuestra App en Internet.
-
+> 📄 En este apartado debes explicar la práctica, qué pasos vas a realizar para para poder llevar a cabo la tarea.
+> 🐋 Si vas a utilizar un DockerCompose, muestra el contenido, y explica las líneas principales con un comentario dentro del fichero docker-compose.yml.
 
 
 #### 6.2.2 Estructura de carpeta para crear el DockerFile
@@ -54,14 +93,14 @@ La tarea consiste en desplegar una aplicación estática a través de un Docker 
 > 🧲 Adjunta capturas de pantalla donde se visualize la estrucutra de carpetas
 
 
-#### 6.2.3 Creación del DockerFile
+#### 6.2.3 DockerFile
 
-> 📄 Explicar el contenido del DockerFile, qué pretendes con él y explicación de las intrucciones que lo conforman
+> 📄 Explicar el contenido del DockerFile, indica con un comentario en cada línea del mismo para qué se utiliza
 
-> 🧲 Adjunta capturas de pantalla donde se visualize la estrucutra de carpetas
+> 🧲 Adjunta un GIF con la construcción del mismo, donde se vicualize la orden y ejecución
 
 
-#### 6.2.2(0) Configuración del servidor, Instalación de Nginx y PHP
+#### 6.2.2(0) Creación de contenedor en base a la imagen
 
 > 🧲 Adjunta capturas de pantalla donde se vea la instalación de Nginx y PHP en el servidor.
 > - Versión de Nginx 1.23.4, Versión de PHP-FPM, y estado de todos los servicios instalados.
