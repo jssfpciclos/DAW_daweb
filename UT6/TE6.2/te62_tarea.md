@@ -1,14 +1,5 @@
 # UT6. Tarea Evaluable 6.2 - Crear imagen Docker para desplegar 2 aplicaciones estáticas
 
-### Alcance
-
-Este tarea se basa en el [ejercicio](../EC/6.2/readme.md) trata de 4 partes:
-
-1. Crear y configurar un sevidor Ubuntu en Digital Ocean a través de un Droplet.
-2. Configurar SSH, Firewall, Nginx y PHP en el servidor.
-3. Desplegar la aplicación PHP en el servidor.
-4. Desplegar una web estática bajo un dominio.
-
 ### 📝 Entregable
 
 La documentación se entregará en un fichero `README.md` en el repositorio oficial del alumno, en la carpeta `UT6/TE6.2/`.<br>
@@ -40,7 +31,7 @@ Tenemos que desplegar 2 aplicaciones estáticas, sobre un mismo contenedor de Ng
 
 <img src="img/02.hospital.01.png" width="50%">
 
-Codigo fuente: [porfolio.website.zip](res/medplus.rar)
+Codigo fuente: [medplus.website.zip](res/medplus.rar)
 
 _Condiciones:_
 
@@ -64,7 +55,7 @@ Codigo fuente: [porfolio.website.zip](res/portfolio.rar)
 _Condiciones:_
 
 - Dominio: {nombre-apellido1}.porfolio.tech / www.{nombre-apellido1}.porfolio.tech
-- Escuchar por el puerto 8080 (nginx)
+- Escuchar por el puerto 80 (nginx)
 - Alojar la web en la carpeta `/var/www/html/porfolio`
 - La página índice principal debe ser `index.html`
 - Crear una página 404.hml personalizada
