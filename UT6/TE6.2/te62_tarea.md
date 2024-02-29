@@ -66,6 +66,12 @@ Imagen de Docker: `nombreusuario/miporfolio:1.0`
 
 > 💡 Los 2 páginas van dentro del mismo servidor/imagen, por lo que los siguientes pasos que se indican se realizarán para ambas sitios-web.
 
+**Recoratorio configuración Nginx multi virtual host**
+
+<img src="https://github.com/jssfpciclos/DAW_daweb/assets/72703706/39f2e424-debd-4430-a023-d0b4457f3dba" width="100%">
+
+
+
 #### 6.2.1 Explicación del proceso
 
 > 📄 En este apartado debes explicar la práctica, qué pasos vas a realizar para para poder llevar a cabo la tarea.
