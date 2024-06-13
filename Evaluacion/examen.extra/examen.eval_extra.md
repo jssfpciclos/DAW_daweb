@@ -146,7 +146,7 @@ services:
       MYSQL_USER: hotel_user
       MYSQL_PASSWORD: 1234
     volumes:
-      - ./conf/db/init:/docker-entrypoint-initdb.d
+      - ./config/db/init:/docker-entrypoint-initdb.d
 
 volumes:
   evfext_dbdata:
