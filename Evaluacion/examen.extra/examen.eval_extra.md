@@ -169,7 +169,7 @@ volumes:
 - [ ] 1.8 Lista imágenes al acceder a `myhotel.local/images` y muestra la lista de imágenes. (1 punto)
 - [ ] 1.9 Página personalizada para error 403 (Forbidden) (0,3 puntos)
 - [ ] 1.10 Modificación configuración Nginx solucionar problema 403 Forbidden, cuando se accede sin poner ninguna página específica. (0,5 puntos)
-- [ ] 1.11. Crear imagen docker a partir de DockerFile utilizando como base la imagen `nginx-php-fpm:8.2` (0,5 puntos)
+- [ ] 1.11. Crear imagen docker a partir de DockerFile utilizando como base la imagen `nginx:1.25.3-alpine` (0,5 puntos)
 - [ ] 1.12. Crear contenedor en base al DockerFile y probar la apliación en local. (0,5 puntos)
 - [] 1.13. Subir contenedor en base a DockerHub (0,5 puntos)
 
@@ -287,7 +287,7 @@ Si accedes a `localhost` o `myhotel.local` verás que obtienes una página `403 
 
 ### 1.11 Crear imagen docker a partir de DockerFile
 
-Crea un fichero `Dockerfile` que genere una imagen de Docker con la configuración aplicada al docker-compose, utilizando la imagen `nginx-php-fpm:8.2` como base.<br>
+Crea un fichero `Dockerfile` que genere una imagen de Docker con la configuración aplicada al docker-compose, utilizando la imagen `nginx:1.25.3-alpine` como base.<br>
 Agrega los comandos necesarios para copiar el fichero de configuración de Nginx, y el código fuente de la aplicación.
 (💡 _Puedes revisar algún ejercicio anterior._)
 
